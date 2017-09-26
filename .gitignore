@@ -1,0 +1,8 @@
+#VS Code files
+\.vscode
+
+#PyCharm files
+\.idea
+
+#python bytecode files
+\__pycache__
