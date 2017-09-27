@@ -6,3 +6,7 @@
 
 #python bytecode files
 \__pycache__
+
+#captured data folder
+IMG/
+driving_log.csv
