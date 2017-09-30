@@ -1,7 +1,8 @@
 from os import path
 import csv
-from keras.utils import Sequence
+from keras.utils.data_utils import Sequence
 from math import ceil
+from math import floor
 import cv2
 from sklearn.utils import shuffle
 import numpy as np
@@ -14,6 +15,7 @@ class DrivingDataSequence(Sequence):
         self.batch_size = batch_size
 
     def __getitem__(self, index):
+        print("__getitem__ :", index)
         start_index = index * self.batch_size
         stop_index = start_index + self.batch_size
         x, y = self.data_provider.get_range(start_index, stop_index)
@@ -22,18 +24,43 @@ class DrivingDataSequence(Sequence):
     def __len__(self):
         return ceil(self.data_provider.count / self.batch_size)
 
+    @property
+    def steps_per_epoch(self):
+        return self.__len__()
+
     def on_epoch_end(self):
-        pass
+        self.data_provider.shuffle()
 
 
-class DataProvider:
+class DataContainer:
 
-    def __init__(self, data_folder_path="../captured_data"):
+    def __init__(self, validation_split, data_folder_path="../captured_data"):
+        if validation_split < 0 or validation_split >= 1:
+            raise Exception("validation_set_len parameter should be in range [0..1]")
 
         data_path = path.join(path.dirname(__file__), data_folder_path)
         with open(path.join(data_path, "driving_log.csv")) as f:
             driving_log = csv.reader(f, delimiter=",")
-            self.data = [DataFrame(data_path, line) for line in driving_log]
+            data = [DataFrame(data_path, line) for line in driving_log]
+
+        shuffle(data)
+        validation_set_len = floor(len(data) * validation_split)
+        self.training_data = DataProvider(data[validation_set_len:])
+        self.validation_data = DataProvider(data[:validation_set_len])
+
+    @property
+    def training(self):
+        return self.training_data
+
+    @property
+    def validation(self):
+        return self.validation_data
+
+
+class DataProvider:
+
+    def __init__(self, data):
+        self.data = data
 
     @property
     def count(self):
@@ -62,7 +89,7 @@ class DataFrame:
 
     @staticmethod
     def _fit_image_path(data_folder_path, original_path):
-        image_in_folder = "/".join(original_path.split("/")[:-2])
+        image_in_folder = "/".join(original_path.split("\\")[-2:])
         image_path = path.join(data_folder_path, image_in_folder)
         return path.normpath(image_path)
 
