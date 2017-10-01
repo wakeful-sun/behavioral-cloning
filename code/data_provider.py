@@ -21,14 +21,14 @@ class DrivingDataSequence(Sequence):
         return np.array(x), np.array(y)
 
     def __len__(self):
-        return floor(self.data_provider.count / self.batch_size)
+        return floor((self.data_provider.count*2)/self.batch_size)
 
     @property
     def steps_per_epoch(self):
         return self.__len__()
 
     def on_epoch_end(self):
-        self.data_provider.shuffle()
+        pass
 
 
 class DataContainer:
@@ -60,6 +60,7 @@ class DataProvider:
 
     def __init__(self, data):
         self.data = data
+        self.augmentation_func = None
 
     @property
     def count(self):
@@ -67,6 +68,10 @@ class DataProvider:
 
     def get_range(self, start_index, stop_index):
         batch = self.data[start_index:stop_index]
+
+        if self.augmentation_func:
+            return self.augmentation_func(batch)
+
         batch_data = [], []
         for item in batch:
             batch_data[0].append(cv2.imread(item.image_center))
@@ -74,8 +79,13 @@ class DataProvider:
 
         return batch_data
 
-    def shuffle(self):
+    def shuffle(self, a=None, b=None):
+        print("\nshuffle")
         shuffle(self.data)
+
+    def register_data_augmentation(self, augmentation_func, increase_rate=1):
+        if augmentation_func and callable(augmentation_func):
+            self.augmentation_func = augmentation_func
 
 
 class DataFrame:
