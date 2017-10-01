@@ -21,8 +21,10 @@ class DataContainer:
         validation_set_len = floor(len(data) * validation_split)
         shuffle(data)
 
-        self.training_data = DataProvider(data[validation_set_len:])
-        self.validation_data = DataProvider(data[:validation_set_len])
+        mask_image = cv2.imread(path.join(data_path, "mask_black.png"))
+
+        self.training_data = DataProvider(data[validation_set_len:], mask_image)
+        self.validation_data = DataProvider(data[:validation_set_len], mask_image)
 
     @property
     def training(self):
@@ -35,8 +37,9 @@ class DataContainer:
 
 class DataProvider:
 
-    def __init__(self, data_frames):
+    def __init__(self, data_frames, mask_image):
         self.data_frames = data_frames
+        self.mask_image = mask_image
 
     @property
     def count(self):
@@ -48,7 +51,8 @@ class DataProvider:
         batch_data = [], []
         for item in batch:
             frame_data = item.get_training_data()
-            batch_data[0].append(frame_data[0])
+            image = cv2.addWeighted(frame_data[0], 0.7, self.mask_image, 1.0, 0)
+            batch_data[0].append(image)
             batch_data[1].append(frame_data[1])
 
         return batch_data
@@ -111,8 +115,9 @@ class DataFrame:
 
     def get_training_data(self):
         bgr_image = cv2.imread(self.im_path_center)
-        #hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
-        training_data = bgr_image, self.steering_angle
+        rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
+
+        training_data = rgb_image, self.steering_angle
 
         for func in self.augmentation_functions:
             if callable(func):
