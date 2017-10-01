@@ -1,34 +1,8 @@
 from os import path
 import csv
-from keras.utils.data_utils import Sequence
-from math import ceil
-from math import floor
 import cv2
 from sklearn.utils import shuffle
-import numpy as np
-
-
-class DrivingDataSequence(Sequence):
-
-    def __init__(self, data_provider, batch_size):
-        self.data_provider = data_provider
-        self.batch_size = batch_size
-
-    def __getitem__(self, index):
-        start_index = index * self.batch_size
-        stop_index = start_index + self.batch_size
-        x, y = self.data_provider.get_range(start_index, stop_index)
-        return np.array(x), np.array(y)
-
-    def __len__(self):
-        return floor((self.data_provider.count*2)/self.batch_size)
-
-    @property
-    def steps_per_epoch(self):
-        return self.__len__()
-
-    def on_epoch_end(self):
-        pass
+from math import floor
 
 
 class DataContainer:
@@ -40,10 +14,12 @@ class DataContainer:
         data_path = path.join(path.dirname(__file__), data_folder_path)
         with open(path.join(data_path, "driving_log.csv")) as f:
             driving_log = csv.reader(f, delimiter=",")
-            data = [DataFrame(data_path, line) for line in driving_log]
+            data_frame_factory = DataFrameFactory(data_path)
+            data = [data_frame_factory.create(line) for line in driving_log]
 
-        shuffle(data)
         validation_set_len = floor(len(data) * validation_split)
+        shuffle(data)
+
         self.training_data = DataProvider(data[validation_set_len:])
         self.validation_data = DataProvider(data[:validation_set_len])
 
@@ -58,43 +34,53 @@ class DataContainer:
 
 class DataProvider:
 
-    def __init__(self, data):
-        self.data = data
-        self.augmentation_func = None
+    def __init__(self, data_frames):
+        self.data_frames = data_frames
 
     @property
     def count(self):
-        return len(self.data)
+        return len(self.data_frames)
 
     def get_range(self, start_index, stop_index):
-        batch = self.data[start_index:stop_index]
-
-        if self.augmentation_func:
-            return self.augmentation_func(batch)
+        batch = self.data_frames[start_index:stop_index]
 
         batch_data = [], []
         for item in batch:
-            batch_data[0].append(cv2.imread(item.image_center))
-            batch_data[1].append(item.steering_angle)
+            frame_data = item.get_training_data()
+            batch_data[0].append(frame_data[0])
+            batch_data[1].append(frame_data[1])
 
         return batch_data
 
     def shuffle(self, a=None, b=None):
         print("\nshuffle")
-        shuffle(self.data)
+        shuffle(self.data_frames)
 
-    def register_data_augmentation(self, augmentation_func, increase_rate=1):
-        if augmentation_func and callable(augmentation_func):
-            self.augmentation_func = augmentation_func
+    def apply_augmentation(self, augmentation_func, apply_rate=1):
+        if not callable(augmentation_func):
+            raise Exception("augmentation_func expected to be function, but was '{}'".format(type(augmentation_func)))
+
+        def create_frame(original_frame):
+            frame = original_frame.create_copy()
+            frame.augmentation_functions.append(augmentation_func)
+            return frame
+
+        extra_frames_map = map(create_frame, self.data_frames[:self.count*apply_rate])
+        self.data_frames = self.data_frames + list(extra_frames_map)
+        shuffle(self.data_frames)
 
 
-class DataFrame:
+class DataFrameFactory:
 
-    def __init__(self, data_folder_path, line):
-        self.center = self._fit_image_path(data_folder_path, line[0])
-        self.left = self._fit_image_path(data_folder_path, line[1])
-        self.right = self._fit_image_path(data_folder_path, line[2])
-        self.angle = float(line[3])
+    def __init__(self, data_folder_path):
+        self.data_folder_path = data_folder_path
+
+    def create(self, line):
+        center = self._fit_image_path(self.data_folder_path, line[0])
+        left = self._fit_image_path(self.data_folder_path, line[1])
+        right = self._fit_image_path(self.data_folder_path, line[2])
+        angle = float(line[3])
+        return DataFrame(center, left, right, angle)
 
     @staticmethod
     def _fit_image_path(data_folder_path, original_path):
@@ -102,18 +88,30 @@ class DataFrame:
         image_path = path.join(data_folder_path, image_in_folder)
         return path.normpath(image_path)
 
-    @property
-    def image_center(self):
-        return self.center
+
+class DataFrame:
+
+    def __init__(self, center_image_path, left_image_path, right_image_path, steering_angle):
+        self.im_path_center = center_image_path
+        self.im_path_left = left_image_path
+        self.im_path_right = right_image_path
+        self.steering_angle = steering_angle
+        self.registered_augmentation_functions = []
+
+    def create_copy(self):
+        data_frame_copy = DataFrame(self.im_path_center, self.im_path_left, self.im_path_right, self.steering_angle)
+        for func in self.augmentation_functions:
+            data_frame_copy.augmentation_functions.append(func)
+        return data_frame_copy
 
     @property
-    def image_center(self):
-        return self.left
+    def augmentation_functions(self):
+        return self.registered_augmentation_functions
 
-    @property
-    def image_center(self):
-        return self.right
+    def get_training_data(self):
+        training_data = cv2.imread(self.im_path_center), self.steering_angle
+        for func in self.augmentation_functions:
+            if callable(func):
+                training_data = func(training_data)
 
-    @property
-    def steering_angle(self):
-        return self.angle
+        return training_data

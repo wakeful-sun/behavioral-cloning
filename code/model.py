@@ -1,7 +1,8 @@
 from nn_model_factory import create_model
 from data_provider import DataContainer
-from data_provider import DrivingDataSequence
+from data_sequence import DrivingDataSequence
 from keras.callbacks import LambdaCallback
+from data_augmentation import flip_center_image
 
 
 BATCH_SIZE = 20
@@ -9,8 +10,11 @@ BATCH_SIZE = 20
 model = create_model()
 model.compile("adam", "mse")
 
-data_container = DataContainer(0.2)
+data_container = DataContainer(0.1)
+
 data_container.training_data.shuffle()
+data_container.training_data.apply_augmentation(flip_center_image)
+data_container.validation_data.apply_augmentation(flip_center_image)
 
 t_seq = DrivingDataSequence(data_container.training_data, BATCH_SIZE)
 v_seq = DrivingDataSequence(data_container.validation_data, BATCH_SIZE)
