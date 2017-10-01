@@ -3,11 +3,12 @@ import csv
 import cv2
 from sklearn.utils import shuffle
 from math import floor
+import matplotlib.image as mpimg
 
 
 class DataContainer:
 
-    def __init__(self, validation_split, data_folder_path="../captured_data"):
+    def __init__(self, validation_split=0, data_folder_path="../captured_data"):
         if validation_split < 0 or validation_split >= 1:
             raise Exception("validation_set_len parameter should be in range [0..1]")
 
@@ -109,7 +110,10 @@ class DataFrame:
         return self.registered_augmentation_functions
 
     def get_training_data(self):
-        training_data = cv2.imread(self.im_path_center), self.steering_angle
+        bgr_image = cv2.imread(self.im_path_center)
+        #hsv_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
+        training_data = bgr_image, self.steering_angle
+
         for func in self.augmentation_functions:
             if callable(func):
                 training_data = func(training_data)

@@ -10,6 +10,8 @@ def create_model(weights_path=None):
     model.add(MaxPooling2D())
     model.add(Conv2D(16, (5, 5), activation="relu"))
     model.add(MaxPooling2D())
+    model.add(Conv2D(28, (5, 5), activation="relu"))
+    model.add(MaxPooling2D())
     model.add(Flatten())
     model.add(Dense(120))
     model.add(Dense(84))
