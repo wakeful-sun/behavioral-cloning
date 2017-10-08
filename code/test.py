@@ -9,7 +9,7 @@ import numpy as np
 data_container = DataContainer()
 image_array, _ = data_container.training.get_range(0, 1)
 image = image_array[0]
-rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+rgb_image = cv2.cvtColor(image, cv2.COLOR_HSV2RGB)
 #plt.imshow(rgb_image)
 #plt.show()
 

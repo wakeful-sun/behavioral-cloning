@@ -115,7 +115,7 @@ class DataFrame:
 
     def get_training_data(self):
         bgr_image = cv2.imread(self.im_path_center)
-        rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
+        rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2HSV)
 
         training_data = rgb_image, self.steering_angle
 
