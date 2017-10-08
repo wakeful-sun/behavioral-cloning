@@ -6,8 +6,8 @@ from data_augmentation import flip_center_image
 import time
 
 
-BATCH_SIZE = 20
-EPOCHS = 5
+BATCH_SIZE = 200
+EPOCHS = 3
 
 model = create_model()
 model.compile("adam", "mse")
