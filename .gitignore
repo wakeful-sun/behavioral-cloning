@@ -12,3 +12,5 @@ IMG/
 driving_log.csv
 #trained model
 model.h5
+#logs
+\output
