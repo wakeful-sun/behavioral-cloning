@@ -58,7 +58,6 @@ class DataProvider:
         return batch_data
 
     def shuffle(self, a=None, b=None):
-        print("\nshuffle")
         shuffle(self.data_frames)
 
     def apply_augmentation(self, augmentation_func, apply_rate=1):

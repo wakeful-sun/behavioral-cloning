@@ -6,14 +6,33 @@ from keras.callbacks import TensorBoard
 from data_augmentation import flip_center_image
 from datetime import datetime
 import time
+from logger import Logger
+import argparse
 
 
 BATCH_SIZE = 20
 EPOCHS = 5
-output_folder = "../output/{:%d.%m.%y_%H-%M}_B{}_E{}/".format(datetime.now(), BATCH_SIZE, EPOCHS)
+model_description = ""
+optimizer = "adam"
+loss_fn = "mse"
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Neural network trainer')
+    parser.add_argument("--batch", type=int, default=BATCH_SIZE, help="Batch size")
+    parser.add_argument("--epochs", type=int, default=EPOCHS, help="Number of epochs")
+    parser.add_argument("--dsc", type=str, default=model_description, help="Model description")
+    args = parser.parse_args()
+
+    BATCH_SIZE = args.batch
+    EPOCHS = args.epochs
+    model_description = args.dsc
+
+
+output_folder = "../output/{:%d.%m.%y_%H-%M}_B{}_E{}_O-{}_L-{}/".format(
+    datetime.now(), BATCH_SIZE, EPOCHS, optimizer, loss_fn)
 
 model = create_model()
-model.compile("adam", "mse")
+model.compile(optimizer, loss_fn, metrics=['accuracy'])
 
 data_container = DataContainer(0.1)
 
@@ -24,8 +43,10 @@ data_container.validation_data.apply_augmentation(flip_center_image)
 t_seq = DrivingDataSequence(data_container.training_data, BATCH_SIZE)
 v_seq = DrivingDataSequence(data_container.validation_data, BATCH_SIZE)
 
-print("Number of training examples: ", t_seq.steps_per_epoch*BATCH_SIZE)
-print("Number of validation examples: ", v_seq.steps_per_epoch*BATCH_SIZE)
+num_training_msg = "Number of training examples: {}".format(t_seq.steps_per_epoch*BATCH_SIZE)
+num_validation_msg = "Number of validation examples: {}".format(v_seq.steps_per_epoch*BATCH_SIZE)
+print(num_training_msg)
+print(num_validation_msg)
 
 start_time = time.time()
 
@@ -33,11 +54,25 @@ callbacks = [
     LambdaCallback(on_epoch_end=data_container.training_data.shuffle),
     TensorBoard(log_dir=output_folder, batch_size=BATCH_SIZE)
 ]
-model.fit_generator(t_seq, t_seq.steps_per_epoch,
+history = model.fit_generator(t_seq, t_seq.steps_per_epoch,
                     epochs=EPOCHS, callbacks=callbacks,
                     validation_data=v_seq, validation_steps=v_seq.steps_per_epoch)
 
 model.save(output_folder + "model.h5")
 
 elapsed_time = time.time() - start_time
-print("Training time: {:.2f} min".format(elapsed_time/60))
+training_time_msg = "Training time: {:.2f} min".format(elapsed_time/60)
+print(training_time_msg)
+
+messages = [
+    "Description: " + model_description,
+    training_time_msg,
+    num_training_msg,
+    num_validation_msg,
+    "Optimizer: {}, Loss function: {}".format(optimizer, loss_fn)
+]
+
+data_logger = Logger(output_folder, model, history.history)
+data_logger.save_summary(messages)
+data_logger.save_model_json()
+data_logger.save_history()
