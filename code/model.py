@@ -11,7 +11,8 @@ import argparse
 
 
 BATCH_SIZE = 20
-EPOCHS = 5
+EPOCHS = 3
+DROPOUT = 0.5
 model_description = ""
 optimizer = "adam"
 loss_fn = "mse"
@@ -20,18 +21,20 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Neural network trainer')
     parser.add_argument("--batch", type=int, default=BATCH_SIZE, help="Batch size")
     parser.add_argument("--epochs", type=int, default=EPOCHS, help="Number of epochs")
-    parser.add_argument("--dsc", type=str, default=model_description, help="Model description")
+    parser.add_argument("--description", type=str, default=model_description, help="Model description")
+    parser.add_argument("--dropout", type=float, default=DROPOUT, help="Model dropout rate in range [0.0:1.0]")
     args = parser.parse_args()
 
     BATCH_SIZE = args.batch
     EPOCHS = args.epochs
-    model_description = args.dsc
+    DROPOUT = args.dropout
+    model_description = args.description
 
 
-output_folder = "../output/{:%d.%m.%y_%H-%M}_B{}_E{}_O-{}_L-{}/".format(
-    datetime.now(), BATCH_SIZE, EPOCHS, optimizer, loss_fn)
+output_folder = "../output/{:%d.%m.%y_%H-%M}_B{}_E{}_D{}_O-{}_L-{}/".format(
+    datetime.now(), BATCH_SIZE, EPOCHS, DROPOUT, optimizer, loss_fn)
 
-model = create_model()
+model = create_model(dropout=DROPOUT)
 model.compile(optimizer, loss_fn, metrics=['accuracy'])
 
 data_container = DataContainer(0.1)
@@ -69,7 +72,7 @@ messages = [
     training_time_msg,
     num_training_msg,
     num_validation_msg,
-    "Optimizer: {}, Loss function: {}".format(optimizer, loss_fn)
+    "Optimizer: {}, Loss function: {}, Dropout: {}".format(optimizer, loss_fn, DROPOUT)
 ]
 
 data_logger = Logger(output_folder, model, history.history)

@@ -2,7 +2,7 @@ from keras.models import Sequential
 from keras.layers import Flatten, Dense, Cropping2D, Conv2D, MaxPooling2D, Dropout, Lambda
 
 
-def create_model(weights_path=None):
+def create_model(weights_path=None, dropout=1.0):
     model = Sequential()
     model.add(Lambda(lambda x: x/255 - 0.5, input_shape=(160, 320, 3), name="normalization"))
     model.add(Cropping2D(((70, 25), (0, 0)), name="cropping"))
@@ -15,7 +15,7 @@ def create_model(weights_path=None):
     model.add(Flatten(name="flatten"))
     model.add(Dense(120, name="fully_connected_1"))
     model.add(Dense(84, name="fully_connected_2"))
-    model.add(Dropout(0.5, name="dropout"))
+    model.add(Dropout(dropout, name="dropout"))
     model.add(Dense(1, name="readout"))
 
     if weights_path:
