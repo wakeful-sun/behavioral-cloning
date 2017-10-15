@@ -21,4 +21,4 @@ def create_model(weights_path=None, dropout=1.0):
     if weights_path:
         model.load_weights(weights_path)
 
-    return model
+    return model, "Classic LeNet 5 model"

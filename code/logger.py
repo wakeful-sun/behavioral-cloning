@@ -1,41 +1,51 @@
 import pandas as pd
+import json
+from os import path
 
 class Logger:
 
-    def __init__(self, output_folder_path, model, history):
-        self.output_folder_path = output_folder_path
+    def __init__(self, run_description, model_description, data_summary_dict, settings, model, history, training_time):
+        self.run_description = run_description
+        self.model_description = model_description
+        self.data_summary_dict = data_summary_dict
+        self.settings = settings
         self.model = model
         self.history = history
+        self.training_time= training_time
 
-    def save_summary(self, messages):
-        t_loss = self.history["loss"][-1]
-        v_loss = self.history["val_loss"][-1]
-        t_accuracy =  self.history["acc"][-1]*100
-        v_accuracy =  self.history["val_acc"][-1]*100
+    def save_summary(self):
+        output_folder_path = path.abspath(self.settings.output_folder)
+        t_accuracy =  self.history["acc"]*100
 
         statistic_messages = [
+            " run description        : {}".format(self.run_description),
+            " model description      : {}".format(self.model_description),
+            " training time          : {:.2f}".format(self.training_time/60),
             "-"*65,
-            "loss:                {:.5f}".format(t_loss),
-            "validation loss:     {:.5f}".format(v_loss),
-            "accuracy:            {:.5f}%".format(t_accuracy),
-            "validation accuracy: {:.5f}%".format(v_accuracy),
+            " training items         : {}".format(self.data_summary_dict["training_items_total"]),
+            " validation items       : {}".format(self.data_summary_dict["validation_items_total"]),
+            " unique steering angles : {}".format(self.data_summary_dict["unique_steering_angles_count"]),
+            "-"*65,
+            " epochs                 : {}".format(self.settings.epochs),
+            " batch size             : {}".format(self.settings.batch_size),
+            " dropout                : {}".format(self.settings.dropout),
+            " optimizer              : {}".format(self.settings.optimizer),
+            " loss fn                : {}".format(self.settings.loss_fn),
+            " output folder          : {}".format(output_folder_path),
+            "-"*65,
+            " loss                   : {:.5f}".format(self.history["loss"]),
+            " validation loss        : {:.5f}".format(self.history["val_loss"]),
+            " accuracy               : {:.5f}%".format(t_accuracy),
+            " validation accuracy    : {:.5f}%".format(self.history["val_acc"]*100),
             "-"*65
         ]
 
-        summary_file_path = "{}_summary_{:.5f}.txt".format(self.output_folder_path, t_accuracy)
-        log_messages = messages + statistic_messages
+        summary_file_path = "{}_summary_{:.5f}.txt".format(output_folder_path, t_accuracy)
 
         with open(summary_file_path, "w") as f:
-            f.write("\n".join(log_messages))
+            f.write("\n".join(statistic_messages))
             f.write("\n\n")
             self.model.summary(print_fn=lambda x: f.write(x + "\n"))
 
-
-    def save_model_json(self):
-        with open(self.output_folder_path + "model.json", "w") as f:
-            f.write(self.model.to_json())
-
-
-    def save_history(self):
-        df = pd.DataFrame(self.history)
-        df.to_csv(self.output_folder_path + "history.csv")
+    def log_results(self, log_file_path):
+        pass

@@ -23,6 +23,7 @@ class DataContainer:
 
         self.training_data = DataProvider(data[validation_set_len:])
         self.validation_data = DataProvider(data[:validation_set_len])
+        self.original_steering_angles = [frame.original_steering_angle for frame in data]
 
     @property
     def training(self):
@@ -31,6 +32,19 @@ class DataContainer:
     @property
     def validation(self):
         return self.validation_data
+
+    def get_summary(self, batch_size):
+        initial_len = len(self.original_steering_angles)
+        unique_steering_angles = set(self.original_steering_angles)
+        data_summary = {
+            "initial_data_items": initial_len,
+            "unique_steering_angles_count": len(unique_steering_angles),
+            "unique_steering_angles": list(unique_steering_angles),
+            "training_items_total": (self.training.count // batch_size) * batch_size,
+            "validation_items_total": (self.validation.count // batch_size) * batch_size,
+            "generated_by_augmentation": self.validation.count + self.training.count - initial_len
+        }
+        return data_summary
 
 
 class DataProvider:
@@ -107,6 +121,10 @@ class DataFrame:
     @property
     def augmentation_functions(self):
         return self.registered_augmentation_functions
+
+    @property
+    def original_steering_angle(self):
+        return self.steering_angle
 
     def get_training_data(self):
         bgr_image = cv2.imread(self.im_path_center)
