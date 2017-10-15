@@ -33,7 +33,7 @@ class DataContainer:
     def validation(self):
         return self.validation_data
 
-    def get_summary(self, batch_size):
+    def get_summary_dict(self, batch_size):
         initial_len = len(self.original_steering_angles)
         unique_steering_angles = set(self.original_steering_angles)
         data_summary = {
@@ -45,6 +45,14 @@ class DataContainer:
             "generated_by_augmentation": self.validation.count + self.training.count - initial_len
         }
         return data_summary
+
+    def print_summary(self, batch_size):
+        summary = self.get_summary_dict(batch_size)
+        print("*" * 80)
+        print(" Training items         : {}".format(summary["training_items_total"]))
+        print(" Validation items       : {}".format(summary["validation_items_total"]))
+        print(" Unique steering angles : {}".format(summary["unique_steering_angles_count"]))
+        print("*" * 80)
 
 
 class DataProvider:
