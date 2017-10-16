@@ -1,6 +1,7 @@
 import numpy as np
 import json
 from os import path
+import matplotlib.pyplot as plt
 
 class Logger:
 
@@ -13,9 +14,21 @@ class Logger:
         self.history = history
         self.training_time= training_time
 
+    @staticmethod
+    def _save_steering_angles_statistics_as_image(path, data):
+        angles, angles_amount = data["angle"], data["size"]
+
+        plt.xlabel("steering angle")
+        plt.ylabel("amount of samples")
+        plt.plot(angles, angles_amount, "go")
+        plt.vlines(angles, 0, angles_amount, "red", "dotted")
+        plt.axhline(0, color='black', linewidth=1.0)
+        plt.savefig(path)
+
     def save_summary(self):
         t_accuracy =  self.history["acc"][-1]*100
         v_accuracy =  self.history["val_acc"][-1]*100
+        steering_angles_statistics = self.data_summary_dict["steering_angles_statistics"]
 
         messages = [
             " run description        : {}".format(self.run_description),
@@ -24,7 +37,7 @@ class Logger:
             "-"*65,
             " training items         : {}".format(self.data_summary_dict["training_items_total"]),
             " validation items       : {}".format(self.data_summary_dict["validation_items_total"]),
-            " unique steering angles : {}".format(self.data_summary_dict["unique_steering_angles_count"]),
+            " unique steering angles : {}".format(len(steering_angles_statistics["angle"])),
             "-"*65,
             " epochs                 : {}".format(self.settings.epochs),
             " batch size             : {}".format(self.settings.batch_size),
@@ -42,6 +55,9 @@ class Logger:
         ]
 
         summary_file_name = "_summary_{:.5f}.txt".format(t_accuracy)
+        summary_fig_img_path = path.join(self.settings.output_folder, "_steering_angles.png")
+
+        self._save_steering_angles_statistics_as_image(summary_fig_img_path, steering_angles_statistics)
 
         with open(path.join(self.settings.output_folder, summary_file_name), "w") as f:
             f.write("\n".join(messages))
@@ -60,11 +76,12 @@ class Logger:
             return serializable_shape
 
         def get_tensor_info(tensor):
+            tensor_shape = tensor.get_shape()
             return {
                 "name": tensor.name,
                 "type": type(tensor).__name__,
-                "shape": tensor.shape.as_list(),
-                "parameters_count": int(np.prod(np.array(tensor.shape)))
+                "shape": shape_to_serializable(tensor_shape),
+                "parameters_count": int(np.prod(np.array(tensor_shape)))
             }
 
         def get_layer_info(layer):

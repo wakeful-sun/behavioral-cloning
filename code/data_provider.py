@@ -3,6 +3,7 @@ import csv
 import cv2
 from sklearn.utils import shuffle
 from math import floor
+import pandas as pd
 import matplotlib.image as mpimg
 
 
@@ -35,11 +36,16 @@ class DataContainer:
 
     def get_summary_dict(self, batch_size):
         initial_len = len(self.original_steering_angles)
-        unique_steering_angles = set(self.original_steering_angles)
+        df = pd.DataFrame({"angle": self.original_steering_angles})
+        steering_angles_statistics = df.groupby("angle")\
+            .size()\
+            .reset_index(name="size")\
+            .sort_values(["size"], ascending=False)\
+            .to_dict(orient="list")
+
         data_summary = {
             "initial_data_items": initial_len,
-            "unique_steering_angles_count": len(unique_steering_angles),
-            "unique_steering_angles": list(unique_steering_angles),
+            "steering_angles_statistics": steering_angles_statistics,
             "training_items_total": (self.training.count // batch_size) * batch_size,
             "validation_items_total": (self.validation.count // batch_size) * batch_size,
             "generated_by_augmentation": self.validation.count + self.training.count - initial_len
@@ -48,10 +54,17 @@ class DataContainer:
 
     def print_summary(self, batch_size):
         summary = self.get_summary_dict(batch_size)
+        steering_angles_statistics = summary["steering_angles_statistics"]
+        initial_len = summary["initial_data_items"]
+
         print("*" * 80)
         print(" Training items         : {}".format(summary["training_items_total"]))
         print(" Validation items       : {}".format(summary["validation_items_total"]))
-        print(" Unique steering angles : {}".format(summary["unique_steering_angles_count"]))
+        print(" Unique steering angles : {}".format(len(steering_angles_statistics)))
+        print(" Top 10 steering angles:")
+        for i in range(0, 10):
+            angle, count = steering_angles_statistics["angle"][i], steering_angles_statistics["size"][i]
+            print("     Steering angle {:.5f} : {:.2f}%".format(angle, (count*100)/initial_len))
         print("*" * 80)
 
 
