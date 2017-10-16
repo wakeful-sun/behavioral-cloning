@@ -48,7 +48,7 @@ class DataContainer:
         summary = self.get_summary_dict(batch_size)
         t_data_summary, v_data_summary = summary["training_data"], summary["validation_data"]
         t_stat = t_data_summary["angle_statistics"]
-        v_stat = t_data_summary["angle_statistics"]
+        v_stat = v_data_summary["angle_statistics"]
         t_data_count = t_data_summary["count"]
         v_data_count = v_data_summary["count"]
 
@@ -88,21 +88,26 @@ class DataProvider:
     def shuffle(self, a=None, b=None):
         shuffle(self.data_frames)
 
-    def apply_augmentation(self, augmentation_func, apply_rate=1):
+    def apply_augmentation(self, augmentation_func, filter_func=None):
+        if filter_func is None:
+            filter_func = lambda x: True
         if not callable(augmentation_func):
             raise Exception("augmentation_func expected to be function, but was '{}'".format(type(augmentation_func)))
+        if not callable(filter_func):
+            raise Exception("filter_func expected to be function, but was '{}'".format(type(filter_func)))
 
         def create_frame(original_frame):
             frame = original_frame.create_copy()
-            frame.augmentation_functions.append(augmentation_func)
+            frame.add_augmentation_func(augmentation_func)
             return frame
 
-        extra_frames_map = map(create_frame, self.data_frames[:self.count*apply_rate])
-        self.data_frames = self.data_frames + list(extra_frames_map)
+        filtered_frames = filter(filter_func, self.data_frames)
+        extra_frames_map = list(map(create_frame, filtered_frames))
+        self.data_frames = self.data_frames + extra_frames_map
         shuffle(self.data_frames)
 
     def get_summary_dict(self, batch_size):
-        steering_angles = [frame.original_steering_angle for frame in self.data_frames]
+        steering_angles = [frame.steering_angle for frame in self.data_frames]
         initial_len = len(steering_angles)
         df = pd.DataFrame({"angle": steering_angles})
         steering_angles_statistics = df.groupby("angle")\
@@ -139,35 +144,41 @@ class DataFrameFactory:
 
 class DataFrame:
 
-    def __init__(self, center_image_path, left_image_path, right_image_path, steering_angle):
+    def __init__(self, center_image_path, left_image_path, right_image_path, steering_angle, f_array=None):
         self.im_path_center = center_image_path
         self.im_path_left = left_image_path
         self.im_path_right = right_image_path
-        self.steering_angle = steering_angle
-        self.registered_augmentation_functions = []
+        self.angle = steering_angle
+        if f_array is None:
+            self.augmentation_functions = []
+        else:
+            self.augmentation_functions = f_array
 
     def create_copy(self):
-        data_frame_copy = DataFrame(self.im_path_center, self.im_path_left, self.im_path_right, self.steering_angle)
-        for func in self.augmentation_functions:
-            data_frame_copy.augmentation_functions.append(func)
+        data_frame_copy = DataFrame(
+            self.im_path_center,
+            self.im_path_left,
+            self.im_path_right,
+            self.angle,
+            self.augmentation_functions)
         return data_frame_copy
 
     @property
-    def augmentation_functions(self):
-        return self.registered_augmentation_functions
+    def steering_angle(self):
+        return self.angle
 
-    @property
-    def original_steering_angle(self):
-        return self.steering_angle
+    def add_augmentation_func(self, f):
+        modify_image_func, self.angle = f(self.angle)
+        self.augmentation_functions.append(modify_image_func)
 
     def get_training_data(self):
         bgr_image = cv2.imread(self.im_path_center)
         rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
 
-        training_data = rgb_image, self.steering_angle
+        image = rgb_image
 
-        for func in self.augmentation_functions:
-            if callable(func):
-                training_data = func(training_data)
+        for modify_image_func in self.augmentation_functions:
+            if callable(modify_image_func):
+                image = modify_image_func(image)
 
-        return training_data
+        return image, self.angle

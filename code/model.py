@@ -1,7 +1,7 @@
 from nn_model_factory import create_model
 from data_provider import DataContainer
 from data_sequence import DrivingDataSequence
-from data_augmentation import flip_center_image
+from data_augmentation import Functions
 from logger import Logger
 from settings import Settings
 from keras.callbacks import LambdaCallback, TensorBoard
@@ -24,12 +24,12 @@ else:
     raise Exception("Program is not designed to be used without input parameters")
 
 # --- data preparation ---
-
+f = Functions()
 data_container = DataContainer(0.1)
 
 data_container.training_data.shuffle()
-data_container.training_data.apply_augmentation(flip_center_image)
-data_container.validation_data.apply_augmentation(flip_center_image)
+data_container.training_data.apply_augmentation(f.flip_center_image, f.non_zero_angle_filter)
+data_container.validation_data.apply_augmentation(f.flip_center_image, f.non_zero_angle_filter)
 
 t_seq = DrivingDataSequence(data_container.training_data, settings.batch_size)
 v_seq = DrivingDataSequence(data_container.validation_data, settings.batch_size)
