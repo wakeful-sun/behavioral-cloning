@@ -18,6 +18,7 @@ class Logger:
     def _save_steering_angles_statistics_as_image(path, data):
         angles, angles_amount = data["angle"], data["size"]
 
+        plt.switch_backend('agg')
         plt.xlabel("steering angle")
         plt.ylabel("amount of samples")
         plt.plot(angles, angles_amount, "go")
@@ -28,36 +29,42 @@ class Logger:
     def save_summary(self):
         t_accuracy =  self.history["acc"][-1]*100
         v_accuracy =  self.history["val_acc"][-1]*100
-        steering_angles_statistics = self.data_summary_dict["steering_angles_statistics"]
+        t_data_summary = self.data_summary_dict["training_data"]
+        v_data_summary = self.data_summary_dict["validation_data"]
+        t_stat = t_data_summary["angle_statistics"]
+        v_stat = v_data_summary["angle_statistics"]
 
         messages = [
-            " run description        : {}".format(self.run_description),
-            " model description      : {}".format(self.model_description),
-            " training time          : {:.2f}".format(self.training_time/60),
+            " run description           : {}".format(self.run_description),
+            " model description         : {}".format(self.model_description),
+            " training time             : {:.2f}".format(self.training_time/60),
             "-"*65,
-            " training items         : {}".format(self.data_summary_dict["training_items_total"]),
-            " validation items       : {}".format(self.data_summary_dict["validation_items_total"]),
-            " unique steering angles : {}".format(len(steering_angles_statistics["angle"])),
+            " training items            : {}".format(t_data_summary["count"]),
+            " validation items          : {}".format(v_data_summary["count"]),
+            " unique steering angles (t): {}".format(len(t_stat["angle"])),
+            " unique steering angles (v): {}".format(len(v_stat["angle"])),
             "-"*65,
-            " epochs                 : {}".format(self.settings.epochs),
-            " batch size             : {}".format(self.settings.batch_size),
-            " dropout                : {}".format(self.settings.dropout),
-            " optimizer              : {}".format(self.settings.optimizer),
-            " loss fn                : {}".format(self.settings.loss_fn),
-            " output folder          : {}".format(self.settings.output_folder),
+            " epochs                    : {}".format(self.settings.epochs),
+            " batch size                : {}".format(self.settings.batch_size),
+            " dropout                   : {}".format(self.settings.dropout),
+            " optimizer                 : {}".format(self.settings.optimizer),
+            " loss fn                   : {}".format(self.settings.loss_fn),
+            " output folder             : {}".format(self.settings.output_folder),
             "-"*65,
-            " loss                   : {:.5f}".format(self.history["loss"][-1]),
-            " validation loss        : {:.5f}".format(self.history["val_loss"][-1]),
-            " accuracy               : {:.5f}%".format(t_accuracy),
-            " validation accuracy    : {:.5f}%".format(v_accuracy),
+            " loss                      : {:.5f}".format(self.history["loss"][-1]),
+            " validation loss           : {:.5f}".format(self.history["val_loss"][-1]),
+            " accuracy                  : {:.5f}%".format(t_accuracy),
+            " validation accuracy       : {:.5f}%".format(v_accuracy),
             "-"*65,
             "\n"
         ]
 
         summary_file_name = "_summary_{:.5f}.txt".format(t_accuracy)
-        summary_fig_img_path = path.join(self.settings.output_folder, "_steering_angles.png")
+        t_summary_fig_img_path = path.join(self.settings.output_folder, "_t_steering_angles.png")
+        v_summary_fig_img_path = path.join(self.settings.output_folder, "_v_steering_angles.png")
 
-        self._save_steering_angles_statistics_as_image(summary_fig_img_path, steering_angles_statistics)
+        self._save_steering_angles_statistics_as_image(t_summary_fig_img_path, t_stat)
+        self._save_steering_angles_statistics_as_image(v_summary_fig_img_path, v_stat)
 
         with open(path.join(self.settings.output_folder, summary_file_name), "w") as f:
             f.write("\n".join(messages))
