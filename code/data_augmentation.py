@@ -11,7 +11,18 @@ class Functions:
         return lambda x: np.fliplr(x), -steering_angle
 
     def flip_v(self, steering_angle):
-        return lambda x: np.flipud(x), -steering_angle
+        def transform(image):
+            flipped_image = np.flipud(image)
+            up = np.zeros([70, image.shape[1], image.shape[2]], dtype=np.uint8)
+            cropped = flipped_image[25:(160 - 70), :]
+            down = np.zeros([25, image.shape[1], image.shape[2]], dtype=np.uint8)
+            r = list()
+            r.extend(up)
+            r.extend(cropped)
+            r.extend(down)
+            return np.array(r)
+
+        return lambda x: transform(x), steering_angle
 
     def histograms_equalization(self, steering_angle):
         return lambda x: cv2.equalizeHist(x), steering_angle
