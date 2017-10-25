@@ -1,5 +1,6 @@
 import numpy as np
 import cv2
+import random
 
 class Functions:
 
@@ -24,8 +25,23 @@ class Functions:
 
         return lambda x: transform(x), steering_angle
 
-    def histograms_equalization(self, steering_angle):
-        return lambda x: cv2.equalizeHist(x), steering_angle
+    def add_noise(self, steering_angle):
+        def get_random_dot_value():
+            return [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
+
+        def replace_dot_values(image, percents):
+            noisy_image = np.copy(image)
+            row_indexes = list(range(0, noisy_image.shape[1]))
+            noise_dots_in_row = int(noisy_image.shape[1]*percents)
+
+            for row in noisy_image:
+                row_noise_indexes = random.sample(row_indexes, noise_dots_in_row)
+                for dot_index in row_noise_indexes:
+                    row[dot_index] = get_random_dot_value()
+
+            return noisy_image
+
+        return lambda x: replace_dot_values(x, 0.2), steering_angle
 
     @staticmethod
     def _tune_contrast(image, power):

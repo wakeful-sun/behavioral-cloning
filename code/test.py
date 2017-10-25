@@ -13,27 +13,13 @@ rgb_image = cv2.cvtColor(brg_image, cv2.COLOR_BGR2RGB)
 # Image data
 image = rgb_image
 #image = cv2.imread('imgur.png',0) # load as 1-channel 8bit grayscale
-cv2.imshow('image',image)
 
 f = Functions()
-c_p = f.increase_contrast(12)[0](image)
-c_m = f.decrease_contrast(12)[0](image)
 
-ud_im = f.flip_v(12)[0](image)
-up = np.zeros([70, image.shape[1], image.shape[2]], dtype=np.uint8)
-cropped = ud_im[25:(160-70), :]
-down = np.zeros([25, image.shape[1], image.shape[2]], dtype=np.uint8)
-r = list()
-r.extend(up)
-r.extend(cropped)
-r.extend(down)
-r = np.array(r)
-print(r.shape)
+r = f.add_noise(0)[0](image)
 
-cv2.imshow("+ contrast", c_p)
-cv2.imshow("- contrast", c_m)
-cv2.imshow("-- contrast", f.decrease_contrast(12)[0](c_p))
-cv2.imshow("flip v", r)
+cv2.imshow('original image',image)
+cv2.imshow("modified image", r)
 
 
 closeWindow = -1
