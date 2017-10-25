@@ -20,7 +20,7 @@ class DataContainer:
             data = [data_frame_factory.create(line) for line in driving_log]
 
         validation_set_len = floor(len(data) * validation_split)
-        shuffle(data)
+        data = shuffle(data)
 
         self.training_data = DataProvider(data[validation_set_len:])
         self.validation_data = DataProvider(data[:validation_set_len])
@@ -86,7 +86,7 @@ class DataProvider:
         return batch_data
 
     def shuffle(self, a=None, b=None):
-        shuffle(self.data_frames)
+        self.data_frames = shuffle(self.data_frames)
 
     def apply_augmentation(self, augmentation_func, filter_func=None):
         if filter_func is None:
@@ -104,14 +104,16 @@ class DataProvider:
         filtered_frames = filter(filter_func, self.data_frames)
         extra_frames_map = list(map(create_frame, filtered_frames))
         self.data_frames = self.data_frames + extra_frames_map
-        shuffle(self.data_frames)
+        self.shuffle()
 
     def drop_zero_angle_items(self, rate):
+        self.shuffle()
         zero_angle_frames = list(filter(lambda x: x.steering_angle == 0, self.data_frames))
         non_zero_angle_frames = list(filter(lambda x: x.steering_angle != 0, self.data_frames))
-        shuffle(zero_angle_frames)
+
         items_to_drop = int(len(zero_angle_frames) * rate)
         self.data_frames = list(non_zero_angle_frames) + list(zero_angle_frames[items_to_drop:])
+        self.shuffle()
 
     def save_top_images(self, output_folder, sub_folder, images_count=20):
         directory = path.join(output_folder, sub_folder)
