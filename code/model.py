@@ -47,7 +47,7 @@ v_seq = DrivingDataSequence(data_container.validation_data, settings.batch_size)
 
 data_container.print_summary(settings.batch_size)
 data_container.training_data.save_top_images(settings.output_folder, "t")
-data_container.training_data.save_top_images(settings.output_folder, "v")
+data_container.validation_data.save_top_images(settings.output_folder, "v")
 
 # --- training ---
 
