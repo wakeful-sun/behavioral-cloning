@@ -22,6 +22,7 @@ c_m = f.decrease_contrast(12)[0](image)
 cv2.imshow("+ contrast", c_p)
 cv2.imshow("- contrast", c_m)
 cv2.imshow("-- contrast", f.decrease_contrast(12)[0](c_p))
+cv2.imshow("flip v", f.flip_center_image_v(12)[0](image))
 
 
 closeWindow = -1
