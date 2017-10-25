@@ -1,4 +1,4 @@
-from os import path
+from os import path, makedirs
 import csv
 import cv2
 from sklearn.utils import shuffle
@@ -105,6 +105,24 @@ class DataProvider:
         extra_frames_map = list(map(create_frame, filtered_frames))
         self.data_frames = self.data_frames + extra_frames_map
         shuffle(self.data_frames)
+
+    def drop_zero_angle_items(self, rate):
+        zero_angle_frames = list(filter(lambda x: x.steering_angle == 0, self.data_frames))
+        non_zero_angle_frames = list(filter(lambda x: x.steering_angle != 0, self.data_frames))
+        shuffle(zero_angle_frames)
+        items_to_drop = int(len(zero_angle_frames) * rate)
+        self.data_frames = list(non_zero_angle_frames) + list(zero_angle_frames[items_to_drop:])
+
+    def save_top_images(self, output_folder, sub_folder, images_count=20):
+        directory = path.join(output_folder, sub_folder)
+        if not path.exists(directory):
+            makedirs(directory)
+
+        for i in range(0, images_count+1):
+            image, angle = self.data_frames[i].get_training_data()
+            brg_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            image_path = path.join(directory, "0_[{}].png".format(angle))
+            cv2.imwrite(image_path, brg_image)
 
     def get_summary_dict(self, batch_size):
         steering_angles = [frame.steering_angle for frame in self.data_frames]

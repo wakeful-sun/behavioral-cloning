@@ -19,15 +19,20 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     settings = Settings(args, "adam", "mse")
-    run_description= args.description
+    run_description = args.description
 else:
     raise Exception("Program is not designed to be used without input parameters")
 
 # --- data preparation ---
 f = Functions()
-data_container = DataContainer(0.2)
+data_container = DataContainer(0.1)
 
 data_container.training_data.shuffle()
+data_container.validation_data.shuffle()
+
+data_container.training_data.drop_zero_angle_items(0.7)
+data_container.validation_data.drop_zero_angle_items(0.7)
+
 data_container.training_data.apply_augmentation(f.flip_h, f.non_zero_angle_filter)
 data_container.training_data.apply_augmentation(f.flip_v, f.non_zero_angle_filter)
 data_container.training_data.apply_augmentation(f.increase_contrast)
@@ -41,6 +46,8 @@ t_seq = DrivingDataSequence(data_container.training_data, settings.batch_size)
 v_seq = DrivingDataSequence(data_container.validation_data, settings.batch_size)
 
 data_container.print_summary(settings.batch_size)
+data_container.training_data.save_top_images(settings.output_folder, "t")
+data_container.training_data.save_top_images(settings.output_folder, "v")
 
 # --- training ---
 
@@ -55,8 +62,8 @@ model.compile(settings.optimizer, settings.loss_fn, metrics=['accuracy'])
 start_time = time.time()
 
 h = model.fit_generator(t_seq, t_seq.steps_per_epoch,
-                              epochs=settings.epochs, callbacks=callbacks,
-                              validation_data=v_seq, validation_steps=v_seq.steps_per_epoch)
+                        epochs=settings.epochs, callbacks=callbacks,
+                        validation_data=v_seq, validation_steps=v_seq.steps_per_epoch)
 
 model.save(settings.output_folder + "model.h5")
 
