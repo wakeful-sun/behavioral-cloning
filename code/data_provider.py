@@ -10,6 +10,7 @@ import matplotlib.image as mpimg
 class DataContainer:
 
     def __init__(self, validation_split=0, data_folder_path="../captured_data"):
+        angle_shift = 2
         if validation_split < 0 or validation_split >= 1:
             raise Exception("validation_set_len parameter should be in range [0..1]")
 
@@ -17,10 +18,14 @@ class DataContainer:
         with open(path.join(data_path, "driving_log.csv")) as f:
             driving_log = csv.reader(f, delimiter=",")
             data_frame_factory = DataFrameFactory(data_path)
-            data = [data_frame_factory.create(line) for line in driving_log]
+            data = []
+            for line in driving_log:
+                data.append(data_frame_factory.create_center(line))
+                data.append(data_frame_factory.create_left(line, angle_shift))
+                data.append(data_frame_factory.create_right(line, -angle_shift))
 
-        validation_set_len = floor(len(data) * validation_split)
         data = shuffle(data)
+        validation_set_len = floor(len(data) * validation_split)
 
         self.training_data = DataProvider(data[validation_set_len:])
         self.validation_data = DataProvider(data[:validation_set_len])
@@ -148,12 +153,20 @@ class DataFrameFactory:
     def __init__(self, data_folder_path):
         self.data_folder_path = data_folder_path
 
-    def create(self, line):
-        center = self._fit_image_path(self.data_folder_path, line[0])
-        left = self._fit_image_path(self.data_folder_path, line[1])
-        right = self._fit_image_path(self.data_folder_path, line[2])
+    def create_center(self, line):
+        center_image_path = self._fit_image_path(self.data_folder_path, line[0])
         angle = float(line[3])
-        return DataFrame(center, left, right, angle)
+        return DataFrame(center_image_path, angle)
+
+    def create_left(self, line, angle_shift):
+        left_image_path = self._fit_image_path(self.data_folder_path, line[1])
+        angle = float(line[3]) + angle_shift
+        return DataFrame(left_image_path, angle)
+
+    def create_right(self, line, angle_shift):
+        right_image_path = self._fit_image_path(self.data_folder_path, line[2])
+        angle = float(line[3])
+        return DataFrame(right_image_path, angle)
 
     @staticmethod
     def _fit_image_path(data_folder_path, original_path):
@@ -164,10 +177,8 @@ class DataFrameFactory:
 
 class DataFrame:
 
-    def __init__(self, center_image_path, left_image_path, right_image_path, steering_angle, f_array=None):
-        self.im_path_center = center_image_path
-        self.im_path_left = left_image_path
-        self.im_path_right = right_image_path
+    def __init__(self, image_path, steering_angle, f_array=None):
+        self.im_path = image_path
         self.angle = steering_angle
         if f_array is None:
             self.augmentation_functions = []
@@ -175,13 +186,7 @@ class DataFrame:
             self.augmentation_functions = f_array
 
     def create_copy(self):
-        data_frame_copy = DataFrame(
-            self.im_path_center,
-            self.im_path_left,
-            self.im_path_right,
-            self.angle,
-            self.augmentation_functions)
-        return data_frame_copy
+        return DataFrame(self.im_path, self.angle, self.augmentation_functions)
 
     @property
     def steering_angle(self):
@@ -192,7 +197,7 @@ class DataFrame:
         self.augmentation_functions.append(modify_image_func)
 
     def get_training_data(self):
-        bgr_image = cv2.imread(self.im_path_center)
+        bgr_image = cv2.imread(self.im_path)
         rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
 
         image = rgb_image
