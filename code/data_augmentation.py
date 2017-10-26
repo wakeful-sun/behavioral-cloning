@@ -1,8 +1,13 @@
 import numpy as np
 import cv2
 import random
+from os import path
 
 class Functions:
+
+    def __init__(self, data_folder_path="../captured_data"):
+        data_path = path.join(path.dirname(__file__), data_folder_path)
+        self.black_image = None
 
     @property
     def non_zero_angle_filter(self):
@@ -54,3 +59,11 @@ class Functions:
 
     def decrease_contrast(self, steering_angle):
         return lambda x: self._tune_contrast(x, 0.3), steering_angle
+
+    def decrease_brightness(self, steering_angle):
+        def get_dark_image(image):
+            if self.black_image is None or self.black_image.shape != image.shape:
+                self.black_image = np.zeros_like(image)
+            return cv2.addWeighted(image, 0.7, self.black_image, 1.0, 0)
+
+        return lambda x: get_dark_image(x), steering_angle

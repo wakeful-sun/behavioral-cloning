@@ -25,20 +25,22 @@ else:
 
 # --- data preparation ---
 f = Functions()
-data_container = DataContainer(0.2)
+data_container = DataContainer(0.1)
 
 data_container.training_data.shuffle()
 data_container.validation_data.shuffle()
 
-data_container.training_data.drop_zero_angle_items(0.3)
-data_container.validation_data.drop_zero_angle_items(0.3)
+data_container.training_data.drop_zero_angle_items(0.7)
+data_container.validation_data.drop_zero_angle_items(0.7)
 
 data_container.training_data.apply_augmentation(f.flip_h, f.non_zero_angle_filter)
+data_container.training_data.apply_augmentation(f.decrease_brightness)
 #data_container.training_data.apply_augmentation(f.add_noise)
 #data_container.training_data.apply_augmentation(f.flip_v, f.non_zero_angle_filter)
 #data_container.training_data.apply_augmentation(f.increase_contrast, f.non_zero_angle_filter)
 #data_container.training_data.apply_augmentation(f.decrease_contrast, f.non_zero_angle_filter)
 data_container.validation_data.apply_augmentation(f.flip_h, f.non_zero_angle_filter)
+data_container.validation_data.apply_augmentation(f.decrease_brightness)
 #data_container.validation_data.apply_augmentation(f.add_noise, f.non_zero_angle_filter)
 #data_container.validation_data.apply_augmentation(f.flip_v, f.non_zero_angle_filter)
 #data_container.validation_data.apply_augmentation(f.increase_contrast, f.non_zero_angle_filter)
@@ -56,7 +58,7 @@ data_container.validation_data.save_top_images(settings.output_folder, "v")
 callbacks = [
     LambdaCallback(on_epoch_end=data_container.training_data.shuffle),
     LambdaCallback(on_epoch_end=data_container.validation_data.shuffle),
-    TensorBoard(log_dir=settings.output_folder, batch_size=settings.batch_size)
+    TensorBoard(log_dir=settings.output_folder, batch_size=settings.batch_size, write_images=True)
 ]
 
 model, model_description = create_model(dropout=settings.dropout)

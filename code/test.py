@@ -16,7 +16,7 @@ image = rgb_image
 
 f = Functions()
 
-r = f.add_noise(0)[0](image)
+r = f.decrease_brightness(0)[0](image)
 
 cv2.imshow('original image',image)
 cv2.imshow("modified image", r)
