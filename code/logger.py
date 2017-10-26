@@ -27,8 +27,8 @@ class Logger:
         plt.savefig(path)
 
     def save_summary(self):
-        t_accuracy =  self.history["acc"][-1]*100
-        v_accuracy =  self.history["val_acc"][-1]*100
+        t_loss = self.history["loss"][-1]
+        v_loss = self.history["val_loss"][-1]
         t_data_summary = self.data_summary_dict["training_data"]
         v_data_summary = self.data_summary_dict["validation_data"]
         t_stat = t_data_summary["angle_statistics"]
@@ -51,15 +51,13 @@ class Logger:
             " loss fn                   : {}".format(self.settings.loss_fn),
             " output folder             : {}".format(self.settings.output_folder),
             "-"*65,
-            " loss                      : {:.5f}".format(self.history["loss"][-1]),
-            " validation loss           : {:.5f}".format(self.history["val_loss"][-1]),
-            " accuracy                  : {:.5f}%".format(t_accuracy),
-            " validation accuracy       : {:.5f}%".format(v_accuracy),
+            " loss                      : {:.5f}".format(t_loss),
+            " validation loss           : {:.5f}".format(v_loss),
             "-"*65,
             "\n"
         ]
 
-        summary_file_name = "_summary_{:.5f}.txt".format(t_accuracy)
+        summary_file_name = "_summary_{:.6f}.txt".format(t_loss)
         t_summary_fig_img_path = path.join(self.settings.output_folder, "_t_steering_angles.png")
         v_summary_fig_img_path = path.join(self.settings.output_folder, "_v_steering_angles.png")
 
