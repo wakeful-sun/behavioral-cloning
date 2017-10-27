@@ -4,30 +4,24 @@ import cv2
 from sklearn.utils import shuffle
 from math import floor
 import pandas as pd
-import matplotlib.image as mpimg
+import numpy as np
 
 
 class DataContainer:
 
     def __init__(self, validation_split=0, data_folder_path="../captured_data"):
-        angle_shift = 2
-        if validation_split < 0 or validation_split >= 1:
-            raise Exception("validation_set_len parameter should be in range [0..1]")
+        assert validation_split > 0 and validation_split <= 1, "validation_set_len parameter should be in range [0..1]"
 
         data_path = path.join(path.dirname(__file__), data_folder_path)
         with open(path.join(data_path, "driving_log.csv")) as f:
             driving_log = csv.reader(f, delimiter=",")
             data_frame_factory = DataFrameFactory(data_path)
-            data = []
-            for line in driving_log:
-                data.append(data_frame_factory.create_center(line))
-                data.append(data_frame_factory.create_left(line, angle_shift))
-                data.append(data_frame_factory.create_right(line, -angle_shift))
+            data = [data_frame_factory.create_center(line) for line in driving_log]
 
         data = shuffle(data)
         validation_set_len = floor(len(data) * validation_split)
 
-        self.training_data = DataProvider(data[validation_set_len:])
+        self.training_data = DataProvider(data[:])
         self.validation_data = DataProvider(data[:validation_set_len])
         self.initial_len = len(data)
 
@@ -93,22 +87,16 @@ class DataProvider:
     def shuffle(self, a=None, b=None):
         self.data_frames = shuffle(self.data_frames)
 
-    def apply_augmentation(self, augmentation_func, filter_func=None):
-        if filter_func is None:
-            filter_func = lambda x: True
-        if not callable(augmentation_func):
-            raise Exception("augmentation_func expected to be function, but was '{}'".format(type(augmentation_func)))
-        if not callable(filter_func):
-            raise Exception("filter_func expected to be function, but was '{}'".format(type(filter_func)))
+    def apply_augmentation(self, augmentation_func):
+        assert callable(augmentation_func), "augmentation_func expected to be function"
 
         def create_frame(original_frame):
             frame = original_frame.create_copy()
             frame.add_augmentation_func(augmentation_func)
             return frame
 
-        filtered_frames = filter(filter_func, self.data_frames)
-        extra_frames_map = list(map(create_frame, filtered_frames))
-        self.data_frames = self.data_frames + extra_frames_map
+        extra_frames_map = map(create_frame, self.data_frames[:])
+        self.data_frames = self.data_frames + list(extra_frames_map)
         self.shuffle()
 
     def drop_zero_angle_items(self, rate):
@@ -158,16 +146,6 @@ class DataFrameFactory:
         angle = float(line[3])
         return DataFrame(center_image_path, angle)
 
-    def create_left(self, line, angle_shift):
-        left_image_path = self._fit_image_path(self.data_folder_path, line[1])
-        angle = float(line[3]) + angle_shift
-        return DataFrame(left_image_path, angle)
-
-    def create_right(self, line, angle_shift):
-        right_image_path = self._fit_image_path(self.data_folder_path, line[2])
-        angle = float(line[3])
-        return DataFrame(right_image_path, angle)
-
     @staticmethod
     def _fit_image_path(data_folder_path, original_path):
         image_in_folder = "/".join(original_path.split("\\")[-2:])
@@ -190,20 +168,24 @@ class DataFrame:
 
     @property
     def steering_angle(self):
-        return self.angle
+        empty_image = np.array([[[]]], dtype=np.uint8)
+        angle = self.angle
+
+        for f in self.augmentation_functions:
+            _, angle = f(empty_image, angle)
+
+        return angle
 
     def add_augmentation_func(self, f):
-        modify_image_func, self.angle = f(self.angle)
-        self.augmentation_functions.append(modify_image_func)
+        self.augmentation_functions.append(f)
 
     def get_training_data(self):
         bgr_image = cv2.imread(self.im_path)
         rgb_image = cv2.cvtColor(bgr_image, cv2.COLOR_BGR2RGB)
 
-        image = rgb_image
+        image, angle = rgb_image, self.angle
 
-        for modify_image_func in self.augmentation_functions:
-            if callable(modify_image_func):
-                image = modify_image_func(image)
+        for f in self.augmentation_functions:
+            image, angle = f(image, angle)
 
-        return image, self.angle
+        return image, angle

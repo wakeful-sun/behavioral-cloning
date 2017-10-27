@@ -5,37 +5,32 @@ from os import path
 
 class Functions:
 
-    def __init__(self, data_folder_path="../captured_data"):
-        data_path = path.join(path.dirname(__file__), data_folder_path)
+    def __init__(self):
         self.black_image = None
 
-    @property
-    def non_zero_angle_filter(self):
-        return lambda x: x.steering_angle != 0
+    def flip_h(self, image, steering_angle):
+        return np.fliplr(image), -steering_angle
 
-    def flip_h(self, steering_angle):
-        return lambda x: np.fliplr(x), -steering_angle
-
-    def flip_v(self, steering_angle):
-        def transform(image):
-            flipped_image = np.flipud(image)
-            up = np.zeros([70, image.shape[1], image.shape[2]], dtype=np.uint8)
+    def flip_v(self, image, steering_angle):
+        def transform(im):
+            flipped_image = np.flipud(im)
+            up = np.zeros([70, im.shape[1], im.shape[2]], dtype=np.uint8)
             cropped = flipped_image[25:(160 - 70), :]
-            down = np.zeros([25, image.shape[1], image.shape[2]], dtype=np.uint8)
+            down = np.zeros([25, im.shape[1], im.shape[2]], dtype=np.uint8)
             r = list()
             r.extend(up)
             r.extend(cropped)
             r.extend(down)
             return np.array(r)
 
-        return lambda x: transform(x), steering_angle
+        return transform(image), steering_angle
 
-    def add_noise(self, steering_angle):
+    def add_noise(self, image, steering_angle):
         def get_random_dot_value():
             return [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]
 
-        def replace_dot_values(image, rate):
-            noisy_image = np.copy(image)
+        def replace_dot_values(im, rate):
+            noisy_image = np.copy(im)
             row_indexes = list(range(0, noisy_image.shape[1]))
             noise_dots_in_row = int(noisy_image.shape[1] * rate)
 
@@ -46,7 +41,7 @@ class Functions:
 
             return noisy_image
 
-        return lambda x: replace_dot_values(x, 0.2), steering_angle
+        return replace_dot_values(image, 0.2), steering_angle
 
     @staticmethod
     def _tune_contrast(image, power):
@@ -54,16 +49,16 @@ class Functions:
         newImage = maxIntensity * (image / maxIntensity) ** power
         return np.array(newImage, dtype=np.uint8)
 
-    def increase_contrast(self, steering_angle):
-        return lambda x: self._tune_contrast(x, 3), steering_angle
+    def increase_contrast(self, image, steering_angle):
+        return self._tune_contrast(image, 3), steering_angle
 
-    def decrease_contrast(self, steering_angle):
-        return lambda x: self._tune_contrast(x, 0.3), steering_angle
+    def decrease_contrast(self, image, steering_angle):
+        return self._tune_contrast(image, 0.3), steering_angle
 
-    def decrease_brightness(self, steering_angle):
-        def get_dark_image(image):
-            if self.black_image is None or self.black_image.shape != image.shape:
-                self.black_image = np.zeros_like(image)
-            return cv2.addWeighted(image, 0.7, self.black_image, 1.0, 0)
+    def decrease_brightness(self, image, steering_angle):
+        def get_dark_image(im):
+            if self.black_image is None or self.black_image.shape != im.shape:
+                self.black_image = np.zeros_like(im)
+            return cv2.addWeighted(im, 0.7, self.black_image, 1.0, 0)
 
-        return lambda x: get_dark_image(x), steering_angle
+        return get_dark_image(image), steering_angle
