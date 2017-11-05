@@ -21,7 +21,7 @@ class DataContainer:
         data = shuffle(data)
         validation_set_len = floor(len(data) * validation_split)
 
-        self.training_data = DataProvider(data[:])
+        self.training_data = DataProvider(data[validation_set_len:])
         self.validation_data = DataProvider(data[:validation_set_len])
         self.initial_len = len(data)
 
@@ -87,7 +87,7 @@ class DataProvider:
     def shuffle(self, a=None, b=None):
         self.data_frames = shuffle(self.data_frames)
 
-    def apply_augmentation(self, augmentation_func):
+    def apply_augmentation(self, augmentation_func, filter_func=None):
         assert callable(augmentation_func), "augmentation_func expected to be function"
 
         def create_frame(original_frame):
@@ -95,7 +95,12 @@ class DataProvider:
             frame.add_augmentation_func(augmentation_func)
             return frame
 
-        extra_frames_map = map(create_frame, self.data_frames[:])
+        if filter_func is None:
+            extra_frames = filter(filter_func, self.data_frames)
+        else:
+            extra_frames = self.data_frames[:]
+
+        extra_frames_map = map(create_frame, extra_frames)
         self.data_frames = self.data_frames + list(extra_frames_map)
         self.shuffle()
 

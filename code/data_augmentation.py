@@ -8,6 +8,10 @@ class Functions:
     def __init__(self):
         self.black_image = None
 
+    @property
+    def non_zero_angle_filter(self):
+        return lambda x: x.steering_angle != 0
+
     def flip_h(self, image, steering_angle):
         return np.fliplr(image), -steering_angle
 

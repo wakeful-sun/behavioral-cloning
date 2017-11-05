@@ -13,9 +13,9 @@ def create_model(dropout):
     model.add(Conv2D(28, (5, 5), activation="relu", name="conv3_5x5_relu"))
     model.add(MaxPooling2D(name="max_pooling3_2x2"))
     model.add(Flatten(name="flatten"))
-    model.add(Dense(120, name="fully_connected_1"))
-    model.add(Dense(84, name="fully_connected_2"))
+    model.add(Dense(180, name="fully_connected_1"))
+    model.add(Dense(95, name="fully_connected_2"))
     model.add(Dropout(dropout, name="dropout"))
     model.add(Dense(1, name="readout"))
 
-    return model, "Classic LeNet 5 model"
+    return model, "LeNet with extended dense layer"
