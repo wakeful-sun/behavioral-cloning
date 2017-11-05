@@ -18,34 +18,37 @@ if __name__ == "__main__":
     parser.add_argument("--description", type=str, default="", help="Script run description")
     args = parser.parse_args()
 
-    settings = Settings(args, "adam", "mse")
+    settings = Settings(args, optimizer="adam", loss_fn="mse")
     run_description = args.description
 else:
     raise Exception("Program is not designed to be used without input parameters")
 
 # --- data preparation ---
-f = Functions()
-data_container = DataContainer(0.1)
+
+validation_set_split_rate = 0.1
+data_container = DataContainer(validation_set_split_rate)
 
 data_container.training_data.shuffle()
 data_container.validation_data.shuffle()
 
+f = Functions()
 data_container.training_data.apply_augmentation(f.flip_h)
+data_container.training_data.apply_augmentation(f.decrease_brightness)
 data_container.validation_data.apply_augmentation(f.flip_h)
-
-t_seq = DrivingDataSequence(data_container.training_data, settings.batch_size)
-v_seq = DrivingDataSequence(data_container.validation_data, settings.batch_size)
 
 data_container.print_summary(settings.batch_size)
 data_container.training_data.save_top_images(settings.output_folder, "t")
 data_container.validation_data.save_top_images(settings.output_folder, "v")
+
+t_seq = DrivingDataSequence(data_container.training_data, settings.batch_size)
+v_seq = DrivingDataSequence(data_container.validation_data, settings.batch_size)
 
 # --- training ---
 
 callbacks = [
     LambdaCallback(on_epoch_end=data_container.training_data.shuffle),
     LambdaCallback(on_epoch_end=data_container.validation_data.shuffle),
-    TensorBoard(log_dir=settings.output_folder, batch_size=settings.batch_size, write_images=True)
+    TensorBoard(log_dir=settings.output_folder, batch_size=settings.batch_size)
 ]
 
 model, model_description = create_model(settings.dropout)

@@ -104,15 +104,6 @@ class DataProvider:
         self.data_frames = self.data_frames + list(extra_frames_map)
         self.shuffle()
 
-    def drop_zero_angle_items(self, rate):
-        self.shuffle()
-        zero_angle_frames = list(filter(lambda x: x.steering_angle == 0, self.data_frames))
-        non_zero_angle_frames = list(filter(lambda x: x.steering_angle != 0, self.data_frames))
-
-        items_to_drop = int(len(zero_angle_frames) * rate)
-        self.data_frames = list(non_zero_angle_frames) + list(zero_angle_frames[items_to_drop:])
-        self.shuffle()
-
     def save_top_images(self, output_folder, sub_folder, images_count=20):
         directory = path.join(output_folder, sub_folder)
         if not path.exists(directory):

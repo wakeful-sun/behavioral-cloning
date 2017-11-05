@@ -1,0 +1,1038 @@
+{
+    "data_summary": {
+        "generated_by_augmentation": 9348,
+        "training_data": {
+            "angle_statistics": {
+                "angle": [
+                    0.0,
+                    0.04139434,
+                    -0.04139434,
+                    0.08980879,
+                    -0.08980879,
+                    -0.09949167,
+                    0.09949167,
+                    0.01234569,
+                    -0.01234569,
+                    -0.1479061,
+                    0.1479061,
+                    -0.157589,
+                    0.157589,
+                    0.1188574,
+                    -0.1188574,
+                    -0.070443,
+                    0.070443,
+                    -0.1866376,
+                    -0.06076011,
+                    0.06076011,
+                    0.1866376,
+                    0.1285403,
+                    -0.1285403,
+                    0.05107722,
+                    0.002662801,
+                    -0.002662801,
+                    -0.05107722,
+                    0.1769547,
+                    -0.1769547,
+                    -0.2156863,
+                    0.2156863,
+                    -0.2060034,
+                    0.2060034,
+                    -0.02202857,
+                    0.02202857,
+                    -0.235052,
+                    0.235052,
+                    0.03171146,
+                    -0.03171146,
+                    -0.2641007,
+                    0.2641007,
+                    0.2544178,
+                    -0.2544178,
+                    -0.2931494,
+                    0.2931494,
+                    -0.2834665,
+                    0.2834665,
+                    -0.3415638,
+                    0.3415638,
+                    -0.3706124,
+                    -0.2447349,
+                    0.3706124,
+                    0.2447349,
+                    -0.322198,
+                    0.322198,
+                    0.2737836,
+                    -0.2737836,
+                    0.3125151,
+                    -0.3996612,
+                    -0.3125151,
+                    -0.3512467,
+                    0.3512467,
+                    0.3996612,
+                    -0.409344,
+                    0.409344,
+                    -0.4287098,
+                    0.4287098,
+                    -0.4868071,
+                    0.4868071,
+                    -0.4383927,
+                    0.4383927,
+                    0.5255386,
+                    0.4674413,
+                    -0.4674413,
+                    -0.5255386,
+                    0.3802953,
+                    -0.49649,
+                    0.49649,
+                    -0.3802953,
+                    0.6901477,
+                    -0.5449044,
+                    -0.6901477,
+                    -0.5158557,
+                    0.5158557,
+                    0.5449044,
+                    0.661099,
+                    0.6126846,
+                    -0.835391,
+                    -0.6126846,
+                    -0.661099,
+                    0.835391
+                ],
+                "size": [
+                    8960,
+                    405,
+                    405,
+                    294,
+                    294,
+                    256,
+                    256,
+                    251,
+                    251,
+                    247,
+                    247,
+                    235,
+                    235,
+                    219,
+                    219,
+                    210,
+                    210,
+                    169,
+                    169,
+                    169,
+                    169,
+                    168,
+                    168,
+                    149,
+                    149,
+                    149,
+                    149,
+                    140,
+                    140,
+                    139,
+                    139,
+                    116,
+                    116,
+                    109,
+                    109,
+                    97,
+                    97,
+                    85,
+                    85,
+                    59,
+                    59,
+                    50,
+                    50,
+                    29,
+                    29,
+                    24,
+                    24,
+                    20,
+                    20,
+                    17,
+                    17,
+                    17,
+                    17,
+                    16,
+                    16,
+                    12,
+                    12,
+                    11,
+                    11,
+                    11,
+                    11,
+                    11,
+                    11,
+                    8,
+                    8,
+                    7,
+                    7,
+                    7,
+                    7,
+                    5,
+                    5,
+                    4,
+                    4,
+                    4,
+                    4,
+                    3,
+                    3,
+                    3,
+                    3,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            },
+            "count": 16825
+        },
+        "validation_data": {
+            "angle_statistics": {
+                "angle": [
+                    -0.0,
+                    -0.08980879,
+                    0.08980879,
+                    0.04139434,
+                    -0.04139434,
+                    0.01234569,
+                    0.1479061,
+                    -0.01234569,
+                    -0.1479061,
+                    0.157589,
+                    -0.157589,
+                    0.1188574,
+                    -0.1188574,
+                    -0.1866376,
+                    0.09949167,
+                    -0.09949167,
+                    0.1866376,
+                    -0.070443,
+                    0.070443,
+                    -0.2156863,
+                    0.2156863,
+                    -0.2060034,
+                    0.2060034,
+                    -0.05107722,
+                    -0.1285403,
+                    0.05107722,
+                    0.1285403,
+                    0.002662801,
+                    -0.002662801,
+                    -0.06076011,
+                    0.1769547,
+                    0.06076011,
+                    -0.1769547,
+                    0.02202857,
+                    0.03171146,
+                    -0.02202857,
+                    -0.03171146,
+                    -0.235052,
+                    0.235052,
+                    -0.2544178,
+                    -0.2641007,
+                    0.2544178,
+                    0.4287098,
+                    -0.3415638,
+                    0.2641007,
+                    0.3415638,
+                    -0.4287098,
+                    0.3512467,
+                    -0.409344,
+                    0.3802953,
+                    0.409344,
+                    -0.2834665,
+                    -0.3512467,
+                    -0.3802953,
+                    0.2834665,
+                    0.5449044,
+                    0.49649,
+                    0.4383927,
+                    0.2931494,
+                    0.3996612,
+                    -0.6030017,
+                    0.2737836,
+                    0.2447349,
+                    -0.5449044,
+                    -0.2447349,
+                    -0.2737836,
+                    -0.2931494,
+                    -0.3996612,
+                    -0.4383927,
+                    -0.49649,
+                    0.6030017
+                ],
+                "size": [
+                    994,
+                    40,
+                    40,
+                    35,
+                    35,
+                    33,
+                    33,
+                    33,
+                    33,
+                    28,
+                    28,
+                    27,
+                    27,
+                    24,
+                    24,
+                    24,
+                    24,
+                    22,
+                    22,
+                    20,
+                    20,
+                    18,
+                    18,
+                    16,
+                    16,
+                    16,
+                    16,
+                    15,
+                    15,
+                    14,
+                    14,
+                    14,
+                    14,
+                    11,
+                    11,
+                    11,
+                    11,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    4,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    2,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            },
+            "count": 1850
+        }
+    },
+    "model_description": "LeNet with extended dense layer",
+    "model_summary": {
+        "layers": [
+            {
+                "input_shape": [
+                    null,
+                    160,
+                    320,
+                    3
+                ],
+                "is_trainable": true,
+                "name": "normalization",
+                "output_shape": [
+                    null,
+                    160,
+                    320,
+                    3
+                ],
+                "trainable_tensors": [],
+                "type": "Lambda"
+            },
+            {
+                "input_shape": [
+                    null,
+                    160,
+                    320,
+                    3
+                ],
+                "is_trainable": true,
+                "name": "cropping",
+                "output_shape": [
+                    null,
+                    65,
+                    320,
+                    3
+                ],
+                "trainable_tensors": [],
+                "type": "Cropping2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    65,
+                    320,
+                    3
+                ],
+                "is_trainable": true,
+                "name": "conv1_5x5_relu",
+                "output_shape": [
+                    null,
+                    61,
+                    316,
+                    6
+                ],
+                "trainable_tensors": [
+                    {
+                        "name": "conv1_5x5_relu/kernel:0",
+                        "parameters_count": 450,
+                        "shape": [
+                            5,
+                            5,
+                            3,
+                            6
+                        ],
+                        "type": "Variable"
+                    },
+                    {
+                        "name": "conv1_5x5_relu/bias:0",
+                        "parameters_count": 6,
+                        "shape": [
+                            6
+                        ],
+                        "type": "Variable"
+                    }
+                ],
+                "type": "Conv2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    61,
+                    316,
+                    6
+                ],
+                "is_trainable": true,
+                "name": "max_pooling1_2x2",
+                "output_shape": [
+                    null,
+                    30,
+                    158,
+                    6
+                ],
+                "trainable_tensors": [],
+                "type": "MaxPooling2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    30,
+                    158,
+                    6
+                ],
+                "is_trainable": true,
+                "name": "conv2_5x5_relu",
+                "output_shape": [
+                    null,
+                    26,
+                    154,
+                    16
+                ],
+                "trainable_tensors": [
+                    {
+                        "name": "conv2_5x5_relu/kernel:0",
+                        "parameters_count": 2400,
+                        "shape": [
+                            5,
+                            5,
+                            6,
+                            16
+                        ],
+                        "type": "Variable"
+                    },
+                    {
+                        "name": "conv2_5x5_relu/bias:0",
+                        "parameters_count": 16,
+                        "shape": [
+                            16
+                        ],
+                        "type": "Variable"
+                    }
+                ],
+                "type": "Conv2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    26,
+                    154,
+                    16
+                ],
+                "is_trainable": true,
+                "name": "max_pooling2_2x2",
+                "output_shape": [
+                    null,
+                    13,
+                    77,
+                    16
+                ],
+                "trainable_tensors": [],
+                "type": "MaxPooling2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    13,
+                    77,
+                    16
+                ],
+                "is_trainable": true,
+                "name": "conv3_5x5_relu",
+                "output_shape": [
+                    null,
+                    9,
+                    73,
+                    28
+                ],
+                "trainable_tensors": [
+                    {
+                        "name": "conv3_5x5_relu/kernel:0",
+                        "parameters_count": 11200,
+                        "shape": [
+                            5,
+                            5,
+                            16,
+                            28
+                        ],
+                        "type": "Variable"
+                    },
+                    {
+                        "name": "conv3_5x5_relu/bias:0",
+                        "parameters_count": 28,
+                        "shape": [
+                            28
+                        ],
+                        "type": "Variable"
+                    }
+                ],
+                "type": "Conv2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    9,
+                    73,
+                    28
+                ],
+                "is_trainable": true,
+                "name": "max_pooling3_2x2",
+                "output_shape": [
+                    null,
+                    4,
+                    36,
+                    28
+                ],
+                "trainable_tensors": [],
+                "type": "MaxPooling2D"
+            },
+            {
+                "input_shape": [
+                    null,
+                    4,
+                    36,
+                    28
+                ],
+                "is_trainable": true,
+                "name": "flatten",
+                "output_shape": [
+                    null,
+                    4032
+                ],
+                "trainable_tensors": [],
+                "type": "Flatten"
+            },
+            {
+                "input_shape": [
+                    null,
+                    4032
+                ],
+                "is_trainable": true,
+                "name": "fully_connected_1",
+                "output_shape": [
+                    null,
+                    180
+                ],
+                "trainable_tensors": [
+                    {
+                        "name": "fully_connected_1/kernel:0",
+                        "parameters_count": 725760,
+                        "shape": [
+                            4032,
+                            180
+                        ],
+                        "type": "Variable"
+                    },
+                    {
+                        "name": "fully_connected_1/bias:0",
+                        "parameters_count": 180,
+                        "shape": [
+                            180
+                        ],
+                        "type": "Variable"
+                    }
+                ],
+                "type": "Dense"
+            },
+            {
+                "input_shape": [
+                    null,
+                    180
+                ],
+                "is_trainable": true,
+                "name": "fully_connected_2",
+                "output_shape": [
+                    null,
+                    95
+                ],
+                "trainable_tensors": [
+                    {
+                        "name": "fully_connected_2/kernel:0",
+                        "parameters_count": 17100,
+                        "shape": [
+                            180,
+                            95
+                        ],
+                        "type": "Variable"
+                    },
+                    {
+                        "name": "fully_connected_2/bias:0",
+                        "parameters_count": 95,
+                        "shape": [
+                            95
+                        ],
+                        "type": "Variable"
+                    }
+                ],
+                "type": "Dense"
+            },
+            {
+                "input_shape": [
+                    null,
+                    95
+                ],
+                "is_trainable": true,
+                "name": "dropout",
+                "output_shape": [
+                    null,
+                    95
+                ],
+                "trainable_tensors": [],
+                "type": "Dropout"
+            },
+            {
+                "input_shape": [
+                    null,
+                    95
+                ],
+                "is_trainable": true,
+                "name": "readout",
+                "output_shape": [
+                    null,
+                    1
+                ],
+                "trainable_tensors": [
+                    {
+                        "name": "readout/kernel:0",
+                        "parameters_count": 95,
+                        "shape": [
+                            95,
+                            1
+                        ],
+                        "type": "Variable"
+                    },
+                    {
+                        "name": "readout/bias:0",
+                        "parameters_count": 1,
+                        "shape": [
+                            1
+                        ],
+                        "type": "Variable"
+                    }
+                ],
+                "type": "Dense"
+            }
+        ],
+        "model": {
+            "backend": "tensorflow",
+            "class_name": "Sequential",
+            "config": [
+                {
+                    "class_name": "Lambda",
+                    "config": {
+                        "arguments": {},
+                        "batch_input_shape": [
+                            null,
+                            160,
+                            320,
+                            3
+                        ],
+                        "dtype": "float32",
+                        "function": [
+                            "\u00e3\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0001\u0000\u0000\u0000\u0002\u0000\u0000\u0000S\u0000\u0000\u0000s\f\u0000\u0000\u0000|\u0000\u0000d\u0001\u0000\u001bd\u0002\u0000\u0018S)\u0003N\u00e9\u00ff\u0000\u0000\u0000g\u0000\u0000\u0000\u0000\u0000\u0000\u00e0?\u00a9\u0000)\u0001\u00da\u0001xr\u0002\u0000\u0000\u0000r\u0002\u0000\u0000\u0000\u00fa7/home/carnd/behavioral-cloning/code/nn_model_factory.py\u00da\b<lambda>\u0007\u0000\u0000\u0000s\u0000\u0000\u0000\u0000",
+                            null,
+                            null
+                        ],
+                        "function_type": "lambda",
+                        "name": "normalization",
+                        "output_shape": null,
+                        "output_shape_type": "raw",
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Cropping2D",
+                    "config": {
+                        "cropping": [
+                            [
+                                70,
+                                25
+                            ],
+                            [
+                                0,
+                                0
+                            ]
+                        ],
+                        "data_format": "channels_last",
+                        "name": "cropping",
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Conv2D",
+                    "config": {
+                        "activation": "relu",
+                        "activity_regularizer": null,
+                        "bias_constraint": null,
+                        "bias_initializer": {
+                            "class_name": "Zeros",
+                            "config": {}
+                        },
+                        "bias_regularizer": null,
+                        "data_format": "channels_last",
+                        "dilation_rate": [
+                            1,
+                            1
+                        ],
+                        "filters": 6,
+                        "kernel_constraint": null,
+                        "kernel_initializer": {
+                            "class_name": "VarianceScaling",
+                            "config": {
+                                "distribution": "uniform",
+                                "mode": "fan_avg",
+                                "scale": 1.0,
+                                "seed": null
+                            }
+                        },
+                        "kernel_regularizer": null,
+                        "kernel_size": [
+                            5,
+                            5
+                        ],
+                        "name": "conv1_5x5_relu",
+                        "padding": "valid",
+                        "strides": [
+                            1,
+                            1
+                        ],
+                        "trainable": true,
+                        "use_bias": true
+                    }
+                },
+                {
+                    "class_name": "MaxPooling2D",
+                    "config": {
+                        "data_format": "channels_last",
+                        "name": "max_pooling1_2x2",
+                        "padding": "valid",
+                        "pool_size": [
+                            2,
+                            2
+                        ],
+                        "strides": [
+                            2,
+                            2
+                        ],
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Conv2D",
+                    "config": {
+                        "activation": "relu",
+                        "activity_regularizer": null,
+                        "bias_constraint": null,
+                        "bias_initializer": {
+                            "class_name": "Zeros",
+                            "config": {}
+                        },
+                        "bias_regularizer": null,
+                        "data_format": "channels_last",
+                        "dilation_rate": [
+                            1,
+                            1
+                        ],
+                        "filters": 16,
+                        "kernel_constraint": null,
+                        "kernel_initializer": {
+                            "class_name": "VarianceScaling",
+                            "config": {
+                                "distribution": "uniform",
+                                "mode": "fan_avg",
+                                "scale": 1.0,
+                                "seed": null
+                            }
+                        },
+                        "kernel_regularizer": null,
+                        "kernel_size": [
+                            5,
+                            5
+                        ],
+                        "name": "conv2_5x5_relu",
+                        "padding": "valid",
+                        "strides": [
+                            1,
+                            1
+                        ],
+                        "trainable": true,
+                        "use_bias": true
+                    }
+                },
+                {
+                    "class_name": "MaxPooling2D",
+                    "config": {
+                        "data_format": "channels_last",
+                        "name": "max_pooling2_2x2",
+                        "padding": "valid",
+                        "pool_size": [
+                            2,
+                            2
+                        ],
+                        "strides": [
+                            2,
+                            2
+                        ],
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Conv2D",
+                    "config": {
+                        "activation": "relu",
+                        "activity_regularizer": null,
+                        "bias_constraint": null,
+                        "bias_initializer": {
+                            "class_name": "Zeros",
+                            "config": {}
+                        },
+                        "bias_regularizer": null,
+                        "data_format": "channels_last",
+                        "dilation_rate": [
+                            1,
+                            1
+                        ],
+                        "filters": 28,
+                        "kernel_constraint": null,
+                        "kernel_initializer": {
+                            "class_name": "VarianceScaling",
+                            "config": {
+                                "distribution": "uniform",
+                                "mode": "fan_avg",
+                                "scale": 1.0,
+                                "seed": null
+                            }
+                        },
+                        "kernel_regularizer": null,
+                        "kernel_size": [
+                            5,
+                            5
+                        ],
+                        "name": "conv3_5x5_relu",
+                        "padding": "valid",
+                        "strides": [
+                            1,
+                            1
+                        ],
+                        "trainable": true,
+                        "use_bias": true
+                    }
+                },
+                {
+                    "class_name": "MaxPooling2D",
+                    "config": {
+                        "data_format": "channels_last",
+                        "name": "max_pooling3_2x2",
+                        "padding": "valid",
+                        "pool_size": [
+                            2,
+                            2
+                        ],
+                        "strides": [
+                            2,
+                            2
+                        ],
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Flatten",
+                    "config": {
+                        "name": "flatten",
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Dense",
+                    "config": {
+                        "activation": "linear",
+                        "activity_regularizer": null,
+                        "bias_constraint": null,
+                        "bias_initializer": {
+                            "class_name": "Zeros",
+                            "config": {}
+                        },
+                        "bias_regularizer": null,
+                        "kernel_constraint": null,
+                        "kernel_initializer": {
+                            "class_name": "VarianceScaling",
+                            "config": {
+                                "distribution": "uniform",
+                                "mode": "fan_avg",
+                                "scale": 1.0,
+                                "seed": null
+                            }
+                        },
+                        "kernel_regularizer": null,
+                        "name": "fully_connected_1",
+                        "trainable": true,
+                        "units": 180,
+                        "use_bias": true
+                    }
+                },
+                {
+                    "class_name": "Dense",
+                    "config": {
+                        "activation": "linear",
+                        "activity_regularizer": null,
+                        "bias_constraint": null,
+                        "bias_initializer": {
+                            "class_name": "Zeros",
+                            "config": {}
+                        },
+                        "bias_regularizer": null,
+                        "kernel_constraint": null,
+                        "kernel_initializer": {
+                            "class_name": "VarianceScaling",
+                            "config": {
+                                "distribution": "uniform",
+                                "mode": "fan_avg",
+                                "scale": 1.0,
+                                "seed": null
+                            }
+                        },
+                        "kernel_regularizer": null,
+                        "name": "fully_connected_2",
+                        "trainable": true,
+                        "units": 95,
+                        "use_bias": true
+                    }
+                },
+                {
+                    "class_name": "Dropout",
+                    "config": {
+                        "name": "dropout",
+                        "rate": 0.5,
+                        "trainable": true
+                    }
+                },
+                {
+                    "class_name": "Dense",
+                    "config": {
+                        "activation": "linear",
+                        "activity_regularizer": null,
+                        "bias_constraint": null,
+                        "bias_initializer": {
+                            "class_name": "Zeros",
+                            "config": {}
+                        },
+                        "bias_regularizer": null,
+                        "kernel_constraint": null,
+                        "kernel_initializer": {
+                            "class_name": "VarianceScaling",
+                            "config": {
+                                "distribution": "uniform",
+                                "mode": "fan_avg",
+                                "scale": 1.0,
+                                "seed": null
+                            }
+                        },
+                        "kernel_regularizer": null,
+                        "name": "readout",
+                        "trainable": true,
+                        "units": 1,
+                        "use_bias": true
+                    }
+                }
+            ],
+            "keras_version": "2.0.8"
+        }
+    },
+    "results": {
+        "history": {
+            "loss": [
+                0.010023256626037568,
+                0.005481125327985441,
+                0.005040342971076427,
+                0.00471831713365474,
+                0.00470580637280623
+            ],
+            "val_loss": [
+                0.0050836565921624265,
+                0.005701297985364658,
+                0.004418725740932231,
+                0.004305808723123895,
+                0.004612688209572052
+            ]
+        },
+        "metrics": {
+            "loss": 0.00470580637280623,
+            "val_loss": 0.004612688209572052
+        },
+        "training_time": 222.07731580734253
+    },
+    "run_description": "",
+    "settings": {
+        "batch_size": 25,
+        "dropout": 0.5,
+        "epochs": 5,
+        "loss_fn": "mse",
+        "optimizer": "adam",
+        "output_folder": "../output/05.11.17_13-35_B25_E5_D0.5_O-adam_L-mse/"
+    }
+}
