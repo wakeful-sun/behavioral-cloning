@@ -15,20 +15,6 @@ class Functions:
     def flip_h(self, image, steering_angle):
         return np.fliplr(image), -steering_angle
 
-    def flip_v(self, image, steering_angle):
-        def transform(im):
-            flipped_image = np.flipud(im)
-            up = np.zeros([70, im.shape[1], im.shape[2]], dtype=np.uint8)
-            cropped = flipped_image[25:(160 - 70), :]
-            down = np.zeros([25, im.shape[1], im.shape[2]], dtype=np.uint8)
-            r = list()
-            r.extend(up)
-            r.extend(cropped)
-            r.extend(down)
-            return np.array(r)
-
-        return transform(image), steering_angle
-
     def add_noise(self, image, steering_angle):
         def get_random_dot_value():
             return [random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)]

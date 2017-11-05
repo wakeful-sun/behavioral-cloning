@@ -30,21 +30,8 @@ data_container = DataContainer(0.1)
 data_container.training_data.shuffle()
 data_container.validation_data.shuffle()
 
-#data_container.training_data.drop_zero_angle_items(0.7)
-#data_container.validation_data.drop_zero_angle_items(0.7)
-
 data_container.training_data.apply_augmentation(f.flip_h)
-#data_container.training_data.apply_augmentation(f.decrease_brightness)
-#data_container.training_data.apply_augmentation(f.add_noise)
-#data_container.training_data.apply_augmentation(f.flip_v, f.non_zero_angle_filter)
-#data_container.training_data.apply_augmentation(f.increase_contrast, f.non_zero_angle_filter)
-#data_container.training_data.apply_augmentation(f.decrease_contrast, f.non_zero_angle_filter)
 data_container.validation_data.apply_augmentation(f.flip_h)
-#data_container.validation_data.apply_augmentation(f.decrease_brightness)
-#data_container.validation_data.apply_augmentation(f.add_noise, f.non_zero_angle_filter)
-#data_container.validation_data.apply_augmentation(f.flip_v, f.non_zero_angle_filter)
-#data_container.validation_data.apply_augmentation(f.increase_contrast, f.non_zero_angle_filter)
-#data_container.validation_data.apply_augmentation(f.decrease_contrast, f.non_zero_angle_filter)
 
 t_seq = DrivingDataSequence(data_container.training_data, settings.batch_size)
 v_seq = DrivingDataSequence(data_container.validation_data, settings.batch_size)
@@ -77,7 +64,6 @@ model.save(settings.output_folder + "model.h5")
 elapsed_time = time.time() - start_time
 print(" Training time : {:.2f} min".format(elapsed_time/60))
 print(" Output path   : {}".format(path.abspath(settings.output_folder)))
-
 
 data_logger = Logger(run_description, model_description, data_container, settings, model, h.history, elapsed_time)
 data_logger.save_summary()
