@@ -169,7 +169,7 @@ class DataFrame:
             self.augmentation_functions = f_array
 
     def create_copy(self):
-        return DataFrame(self.im_path, self.angle, self.augmentation_functions)
+        return DataFrame(self.im_path, self.angle, list(self.augmentation_functions))
 
     @property
     def steering_angle(self):
