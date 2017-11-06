@@ -92,10 +92,7 @@ And some random images:
 
 <img src="./data/t/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees"> <img src="./data/t/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees"> <img src="./data/t/0_[-0.1188574].png" width="160" heigth="80" alt="-0.12 degrees" title="-0.12 degrees"> <img src="./data/t/0_[0.1479061].png" width="160" heigth="80" alt="0.15 degrees" title="0.15 degrees">
 
-<img src="./data/t/0_[-0.2544178].png" width="160" heigth="80" alt="-0.25 degrees" title="-0.25 degrees">
-<img src="./data/t/0_[0.04139434].png" width="160" heigth="80" alt="0.04 degrees" title="0.04 degrees">
-<img src="./data/t/0_[0.06076011].png" width="160" heigth="80" alt="0.06 degrees" title="0.06 degrees">
-<img src="./data/t/0_[0.08980879].png" width="160" heigth="80" alt="0.09 degrees" title="0.09 degrees">
+<img src="./data/t/0_[-0.2544178].png" width="160" heigth="80" alt="-0.25 degrees" title="-0.25 degrees"> <img src="./data/t/0_[0.04139434].png" width="160" heigth="80" alt="0.04 degrees" title="0.04 degrees"> <img src="./data/t/0_[0.06076011].png" width="160" heigth="80" alt="0.06 degrees" title="0.06 degrees"> <img src="./data/t/0_[0.08980879].png" width="160" heigth="80" alt="0.09 degrees" title="0.09 degrees">
 <br/>
 <br/>
 Validation data had 1850 examples of 71 unique steering angles. And it's angle/images amount dependency:
@@ -104,15 +101,9 @@ Validation data had 1850 examples of 71 unique steering angles. And it's angle/i
 
 Some validation image examples:
 
-<img src="./data/v/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
-<img src="./data/v/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
-<img src="./data/v/0_[0.1188574].png" width="160" heigth="80" alt="0.12 degrees" title="0.12 degrees">
-<img src="./data/v/0_[-0.1479061].png" width="160" heigth="80" alt="-0.15 degrees" title="-0.15 degrees">
+<img src="./data/v/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees"> <img src="./data/v/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees"> <img src="./data/v/0_[0.1188574].png" width="160" heigth="80" alt="0.12 degrees" title="0.12 degrees"> <img src="./data/v/0_[-0.1479061].png" width="160" heigth="80" alt="-0.15 degrees" title="-0.15 degrees">
 
-<img src="./data/v/0_[-0.2156863].png" width="160" heigth="80" alt="-0.22 degrees" title="-0.22 degrees">
-<img src="./data/v/0_[0.2641007].png" width="160" heigth="80" alt="0.26 degrees" title="0.26 degrees">
-<img src="./data/v/0_[0.3802953].png" width="160" heigth="80" alt="0.38 degrees" title="0.38 degrees">
-<img src="./data/v/0_[-0.04139434].png" width="160" heigth="80" alt="-0.04 degrees" title="-0.04 degrees">
+<img src="./data/v/0_[-0.2156863].png" width="160" heigth="80" alt="-0.22 degrees" title="-0.22 degrees"> <img src="./data/v/0_[0.2641007].png" width="160" heigth="80" alt="0.26 degrees" title="0.26 degrees"> <img src="./data/v/0_[0.3802953].png" width="160" heigth="80" alt="0.38 degrees" title="0.38 degrees"> <img src="./data/v/0_[-0.04139434].png" width="160" heigth="80" alt="-0.04 degrees" title="-0.04 degrees">
 <br/>
 <br/>
 <h6>Solution design approach</h6>
