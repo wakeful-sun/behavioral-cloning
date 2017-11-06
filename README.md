@@ -7,7 +7,7 @@ In order to collect images for training:
 * run simulator in training mode
 * press `RECORD` button and select output location
 * press `RECORD` button again to start recording
-* drive. Better to use wheel controller or gamepad. It will produce better quality training data.
+* drive. Better to use wheel controller or gamepad with analog stick. It will produce better quality training data.
 * press `RECORD` button to stop recording
 * put recorded images and CSV file into `.\captured_data\` folder
 
@@ -21,13 +21,11 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image0]: ./data/_t_steering_angles.png "Steering angles of training data set"
+[image1]: ./data/_v_steering_angles.png "Steering angles of validation data set"
+[image2]: ./data/graph.png "Model graph"
+[image3]: ./data/loss.png "Training loss"
+[image4]: ./data/v_loss.png "Training loss"
 
 **Project structure and usage examples**
 * `code` folder, contains all rquired code to train the network. `.\code\main.py` is the entry point. Here is an example of usage:
@@ -53,12 +51,12 @@ The goals / steps of this project are the following:
 
 **Model Architecture and Training Strategy**
 
-1. Model architecture
+<h6>Model architecture</h6>
 
-I utilazied LeNet model with extended dense layers. Here is it's configuration:
+My final solution uses [**LeNet**](http://yann.lecun.com/exdb/lenet/) model with extended dense layers. The model was initially designed to recognize character recognition. But it occures that it able to recognize patterns of road turns. Here is it's configuration:
 
 |Layer name              |  Layer type                 |Output Shape       |Param #    |
-|========================|=============================|===================|===========|
+| ---                    | ---                         | ---               | :---:     |
 |normalization           |Lambda                       |(None, 160, 320, 3)|0          |
 |cropping                |Cropping2D                   |(None, 65, 320, 3) |0          |
 |conv1_5x5_relu          |Conv2D 5x5 + RELU activation |(None, 61, 316, 6) |456        |
@@ -77,72 +75,106 @@ I utilazied LeNet model with extended dense layers. Here is it's configuration:
 |**Non-trainable params**|                             |                   |**0**      |
 
 
-####2. Attempts to reduce overfitting in the model
+The model is constructed by factory located in `.\code\nn_model_factory.py` file.
+Model learnin process uses Adam optimized and mean squared error function for loss measurement.
 
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
+<h6>Training and validation data</h6>
 
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
+Input data consisted from images captured during 3 laps of manual driving in each direction. As the result my `driving_log.csv` file had 9348 rows. I also used flip horizontal image data augmentation with steering angle sign inversion on entire data set. Just right after driving log loaded and parsed I shuffle it and split on training and validation data.
 
-####3. Model parameter tuning
+Here is some statistics from provided model training run.
 
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
+Training data had 16825 examples of 91 unique steering angles. Here is angle/images amount dependency:
 
-####4. Appropriate training data
+![alt text][image0]
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
+And some random images:
 
-For details about how I created the training data, see the next section. 
+<img src="./data/t/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
+<img src="./data/t/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
+<img src="./data/t/0_[-0.1188574].png" width="160" heigth="80" alt="-0.12 degrees" title="-0.12 degrees">
+<img src="./data/t/0_[0.1479061].png" width="160" heigth="80" alt="0.15 degrees" title="0.15 degrees">
 
-###Model Architecture and Training Strategy
-
-####1. Solution Design Approach
-
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
-
-####2. Final Model Architecture
-
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
+<img src="./data/t/0_[-0.2544178].png" width="160" heigth="80" alt="-0.25 degrees" title="-0.25 degrees">
+<img src="./data/t/0_[0.04139434].png" width="160" heigth="80" alt="0.04 degrees" title="0.04 degrees">
+<img src="./data/t/0_[0.06076011].png" width="160" heigth="80" alt="0.06 degrees" title="0.06 degrees">
+<img src="./data/t/0_[0.08980879].png" width="160" heigth="80" alt="0.09 degrees" title="0.09 degrees">
+<br/>
+<br/>
+Validation data had 1850 examples of 71 unique steering angles. And it's angle/images amount dependency:
 
 ![alt text][image1]
 
-####3. Creation of the Training Set & Training Process
+Some validation image examples:
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+<img src="./data/v/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
+<img src="./data/v/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
+<img src="./data/v/0_[0.1188574].png" width="160" heigth="80" alt="0.12 degrees" title="0.12 degrees">
+<img src="./data/v/0_[-0.1479061].png" width="160" heigth="80" alt="-0.15 degrees" title="-0.15 degrees">
+
+<img src="./data/v/0_[-0.2156863].png" width="160" heigth="80" alt="-0.22 degrees" title="-0.22 degrees">
+<img src="./data/v/0_[0.2641007].png" width="160" heigth="80" alt="0.26 degrees" title="0.26 degrees">
+<img src="./data/v/0_[0.3802953].png" width="160" heigth="80" alt="0.38 degrees" title="0.38 degrees">
+<img src="./data/v/0_[-0.04139434].png" width="160" heigth="80" alt="-0.04 degrees" title="-0.04 degrees">
+<br/>
+<br/>
+<h6>Solution design approach</h6>
+
+I started with suggested technique - create something extremely simple that somehow works and improve it. So I used one flatten layer and output layer with one element for network model. And I collected almost 2 laps of data to check how everything works. 
+
+The first thing I did was the data wrapper. It allows images data loading at the moment it needed, data set extension with help of augmentation functions, data summary information and data shuffling. 
+Then I created logger to be able to collect, compare and analize different models and different conditions. And I updated model to LeNet-5, it has about 500k parameters. The model also has dropout layer to control overfitting. The model was good enough to get me over the bridge, so I decided to stick to it and extend it abit or improve quality of input data. I started from input data.
+
+Data statistics said that the major part of images contained 0 steering angle. So I decided that model will drive better if I provide more images with non zero angle for learning. It was wrong decision. I also tried to extend my initial data with augmentation functions and left+right camera images. Most of my augmentation functions had low performance. It was hard to experiment with model that learns longer then 10 min. At the end I decided to collect training data again, using lowest resolution and steering more carefully. So I collected 3 laps of data for each direction. And then I found some bugs in my data wrapper. When I fixed everything I managed to traing original LeNet model, so it could drive in acceptable way. But next training cycle gave me non properly driving model. And I decided to find out how to build model which does not have training randomness. And each training result drives good.
+
+During development I faced other difficulties. I discovered that batch size influence on model accuracy, not only trining time like I thought. Another surprising for me thing was relation of loss value statistics Keras outputs in consone and how actually model drives. I trained model for many epochs and reached quite low loss, but resulting model was driving terribly.
+
+After some experiments I decided to extend model capacity, so I added more elements into dense layers. And now model has about 750k parameters. I have an impression that model started driving more smoothly.
+
+I haven't managed to overcome training result randomness. I tried dedicated set for validation data, to have constat values in training set. Also I found out my data set is good enough to give well driving model with no augmentation. Final training process uses only flip horizontal augmentation, It's fast and it pushes car more to the center of road. With my set of data about each 10th training result is able to drive car properly. I have some more ideas to reduce this randomness, and maybe I'll come back to it later on.
+
+<h6>Some more information about provided model</h6>
+
+Model training have taken 3.7 minutes. Model training hyper parameters:
+
+|parameter     | value|
+| ---          |:---: |
+| epochs       | 5    |
+| batch size   | 25   |
+| dropout      | 0.5  |
+| optimizer    | adam |
+| loss function| mse  |
+
+Data information:
+
+ **9348** images were generated by flip horizontally augmentation
+
+Training set
+
+|                           | value  |
+| ---                       | :---:  |
+| training items            | 16825  |
+| unique steering angles (t)| 91     |
+| zero angle images (t)     | 53.25% |
+
+Validation set
+
+|                           | value  |
+| ---                       | :---:  |
+| validation items          | 1850   |
+| unique steering angles (v)| 71     |
+| zero angle images (V)     | 53.73% |
+
+The model grapgh:
 
 ![alt text][image2]
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+Training loss (final loss value is 0.0047058):
 
 ![alt text][image3]
+
+Validation loss (final loss value is 0.0046137):
+
 ![alt text][image4]
-![alt text][image5]
 
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+`.\data\log_entry.json` file contains more detailed information about model and training conditions

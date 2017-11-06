@@ -33,7 +33,7 @@ data_container.validation_data.shuffle()
 
 f = Functions()
 data_container.training_data.apply_augmentation(f.flip_h)
-data_container.training_data.apply_augmentation(f.decrease_brightness)
+# data_container.training_data.apply_augmentation(f.decrease_brightness)
 data_container.validation_data.apply_augmentation(f.flip_h)
 
 data_container.print_summary(settings.batch_size)

@@ -112,7 +112,7 @@ class DataProvider:
         for i in range(0, images_count+1):
             image, angle = self.data_frames[i].get_training_data()
             brg_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-            image_path = path.join(directory, "0_[{}].png".format(angle))
+            image_path = path.join(directory, "{}_[{}].png".format(i, angle))
             cv2.imwrite(image_path, brg_image)
 
     def get_summary_dict(self, batch_size):
