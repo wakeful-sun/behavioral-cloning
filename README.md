@@ -29,7 +29,7 @@ The goals / steps of this project are the following:
 
 **Project structure and usage examples**
 * `code` folder, contains all rquired code to train the network. `.\code\main.py` is the entry point. Here is an example of usage:
-    
+
     ```
     python model.py --batch=25 --epochs=5 --dropout=0.5 --description=""
     ```
@@ -39,7 +39,7 @@ The goals / steps of this project are the following:
     * `epochs` number of epochs (defaul value is 1)
     * `dropout` is a dropout rate for model's dropout layer (default value is 0.5)
     * `description` is run description (defaul value is empty text)
-    
+
     Each `model.py` run will produce separate folder with `model.h5` file and detailed run information under `.\output\` location. The information in JSON format also will be added into `.\output\history.log` file. So it's easy to collect and compare different run results.
 * `model.h5` is already trained Keras model that can drive car on the first track both forward and backward
 * `forward.mp4` and `backward.mp4` files are video recordings of supplied `model.h5` neural network behavior
@@ -90,10 +90,7 @@ Training data had 16825 examples of 91 unique steering angles. Here is angle/ima
 
 And some random images:
 
-<img src="./data/t/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
-<img src="./data/t/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees">
-<img src="./data/t/0_[-0.1188574].png" width="160" heigth="80" alt="-0.12 degrees" title="-0.12 degrees">
-<img src="./data/t/0_[0.1479061].png" width="160" heigth="80" alt="0.15 degrees" title="0.15 degrees">
+<img src="./data/t/0_[0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees"> <img src="./data/t/0_[-0.0].png" width="160" heigth="80" alt="0 degrees" title="0 degrees"> <img src="./data/t/0_[-0.1188574].png" width="160" heigth="80" alt="-0.12 degrees" title="-0.12 degrees"> <img src="./data/t/0_[0.1479061].png" width="160" heigth="80" alt="0.15 degrees" title="0.15 degrees">
 
 <img src="./data/t/0_[-0.2544178].png" width="160" heigth="80" alt="-0.25 degrees" title="-0.25 degrees">
 <img src="./data/t/0_[0.04139434].png" width="160" heigth="80" alt="0.04 degrees" title="0.04 degrees">
@@ -120,9 +117,9 @@ Some validation image examples:
 <br/>
 <h6>Solution design approach</h6>
 
-I started with suggested technique - create something extremely simple that somehow works and improve it. So I used one flatten layer and output layer with one element for network model. And I collected almost 2 laps of data to check how everything works. 
+I started with suggested technique - create something extremely simple that somehow works and improve it. So I used one flatten layer and output layer with one element for network model. And I collected almost 2 laps of data to check how everything works.
 
-The first thing I did was the data wrapper. It allows images data loading at the moment it needed, data set extension with help of augmentation functions, data summary information and data shuffling. 
+The first thing I did was the data wrapper. It allows images data loading at the moment it needed, data set extension with help of augmentation functions, data summary information and data shuffling.
 Then I created logger to be able to collect, compare and analize different models and different conditions. And I updated model to LeNet-5, it has about 500k parameters. The model also has dropout layer to control overfitting. The model was good enough to get me over the bridge, so I decided to stick to it and extend it abit or improve quality of input data. I started from input data.
 
 Data statistics said that the major part of images contained 0 steering angle. So I decided that model will drive better if I provide more images with non zero angle for learning. It was wrong decision. I also tried to extend my initial data with augmentation functions and left+right camera images. Most of my augmentation functions had low performance. It was hard to experiment with model that learns longer then 10 min. At the end I decided to collect training data again, using lowest resolution and steering more carefully. So I collected 3 laps of data for each direction. And then I found some bugs in my data wrapper. When I fixed everything I managed to traing original LeNet model, so it could drive in acceptable way. But next training cycle gave me non properly driving model. And I decided to find out how to build model which does not have training randomness. And each training result drives good.
